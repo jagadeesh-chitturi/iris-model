@@ -1,0 +1,21 @@
+# C++ compiled binaries and objects
+*.o
+*.out
+*.exe
+bin/
+build/
+
+# Python cache and environments
+__pycache__/
+*.pyc
+.env
+venv/
+env/
+
+# Model outputs (Keep the directory structure, ignore the contents)
+output/*
+!output/.gitkeep 
+
+# OS generated files
+.DS_Store
+Thumbs.db
