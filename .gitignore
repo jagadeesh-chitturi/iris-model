@@ -14,8 +14,13 @@ env/
 
 # Model outputs (Keep the directory structure, ignore the contents)
 output/*
-!output/.gitkeep 
+!output/.gitkeep
+out/
 
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# IDE specific
+.vs/
+.vscode/
