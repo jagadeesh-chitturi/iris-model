@@ -5,7 +5,7 @@ project(GMM_Model)
 find_package(GSL REQUIRED)
 
 # Define the executable and all source files
-add_executable(mosquito_sim 
+add_executable(mosquito_sim
     src/Mosquito_Stage_2.cpp 
     src/add_mosqs_function.cpp 
     src/read_variables_from_csv.cpp

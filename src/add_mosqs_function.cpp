@@ -6,9 +6,22 @@
 
 static gsl_rng* _RNG_P;
 
-//month changes
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * @brief Adds a mosquito to the environment
+ *
+ * @details This function adds a mosquito or egg to the environment.
+ * It updates the status of the mosquito and adds it to the correct
+ * vector based on its status.
+ *
+ * @param new_status The status of the mosquito (0 = egg, 1 = larva, 2 = pupa, 3 = adult)
+ * @param is_female_new Whether the mosquito is female or not
+ * @param is_treated_new Whether the mosquito has been treated or not
+ * @param is_mated_new Whether the mosquito has mated or not
+ * @param gene_stat_new The status of the mosquito's genes (0 = wild, 1 = resistant, 2 = susceptible)
+ */
 
-
+/*******  f1ff6505-d994-419c-a382-01d0a42ab083  *******/	
 void add_mosq(int new_status, bool is_female_new, bool is_treated_new, bool is_mated_new, int gene_stat_new) { //adds mosquioes or eggs to the environment
 	mosq* new_mosq = new mosq;
 	mosq_count += 1;
@@ -57,24 +70,33 @@ void add_mosq(int new_status, bool is_female_new, bool is_treated_new, bool is_m
 }
 
 
-void prnt_vectr(vector <mosq*> inp_vect, string gender) { //printing vectors fo each type of mosquitoes
-	/*cout << "\n" << gender<<" vector size = " << inp_vect.size()<<"\n";
-	for (int i = 0; i < inp_vect.size(); i++) {
-		cout << inp_vect.at(i)->mosq_id << " ";
-	}*/
+// void prnt_vectr(vector <mosq*> inp_vect, string gender) { //printing vectors fo each type of mosquitoes
+// 	/*cout << "\n" << gender<<" vector size = " << inp_vect.size()<<"\n";
+// 	for (int i = 0; i < inp_vect.size(); i++) {
+// 		cout << inp_vect.at(i)->mosq_id << " ";
+// 	}*/
 
-}
+// }
 
-void prnt_all_vect() { // printing all types at once in vector
-	/*prnt_vectr(male_vector, "Male");
-	prnt_vectr(female_vector, "Female");
-	prnt_vectr(egg_vector, "Egg");
-	prnt_vectr(larve_vector, "Larve");
-	prnt_vectr(pupe_vector, "Pupe");*/
-}
+// void prnt_all_vect() { // printing all types at once in vector
+// 	/*prnt_vectr(male_vector, "Male");
+// 	prnt_vectr(female_vector, "Female");
+// 	prnt_vectr(egg_vector, "Egg");
+// 	prnt_vectr(larve_vector, "Larve");
+// 	prnt_vectr(pupe_vector, "Pupe");*/
+// }
 
 
 
+/**
+ * @brief Shows the mosquito linked list
+ *
+ * @details This function prints all the mosquito details in the linked list.
+ * It shows the total population of all mosquitoes, the number of male, female, egg, larve, and pupe mosquitoes.
+ * If the linked list is empty, it prints a message saying so.
+ * It then prints the mosquito ID, stage, is_female status, treated status, and mated status for each mosquito in the linked list.
+ * Finally, it prints the mosquito ID of the head and last mosquito in the linked list.
+ */
 void show_mosqs() { //printing mosquito linked list
 	struct mosq* ptr;
 	cout << "\n ********** entered mosquito showwww ***********";
@@ -117,19 +139,19 @@ std::string doubleToString(double value) {
 	return ss.str();
 }
 
-void write_double_CSV(const std::vector<double>& data, const std::string& filename) {
-	std::ofstream file(filename);
+// void write_double_CSV(const std::vector<double>& data, const std::string& filename) {
+// 	std::ofstream file(filename);
 
-	// Write the header
-	file << "Values" << std::endl;
+// 	// Write the header
+// 	file << "Values" << std::endl;
 
-	// Write the data
-	for (const auto& value : data) {
-		file << doubleToString(value) << std::endl;
-	}
+// 	// Write the data
+// 	for (const auto& value : data) {
+// 		file << doubleToString(value) << std::endl;
+// 	}
 
-	file.close();
-}
+// 	file.close();
+// }
 
 
 void write_csv(std::string filename, std::vector<std::pair<std::string, std::vector<int>>> dataset) {
@@ -1433,7 +1455,7 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 			cout << "\n  " << icheck << " -----caring cap value is- " << all_dates_caring_cap_vector[icheck];
 		}
 
-		show_mosqs();
+		// show_mosqs();
 		int temp_female_cnt = get_adult_female_count();
 		cout << "\n the female count from func is " << temp_female_cnt;
 		//for (int i = 0; i < env_1.initial_mosqs; i++) {
@@ -1456,7 +1478,7 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 		create_initial_mosquitoes(initial_larve_agents_frm_ratio, initial_pupe_agents_frm_ratio, initial_adult_female_agents_frm_ratio, initial_adult_male_agents_frm_ratio, _RNG_P);
 
 
-		show_mosqs();
+		// show_mosqs();
 		temp_female_cnt = get_adult_female_count();
 		cout << "\n the female count from func is " << temp_female_cnt;
 		cout << "\n Male vector size" << male_vector.size();
@@ -1582,21 +1604,20 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 					break;
 				}
 
-				prnt_all_vect();
+				// prnt_all_vect();
 				//adding l* implementation for larve to kill excess
 				temp = head;
 				i = 0;
 				temp = head;
 				curr_mosq = head;
 				prev_mosq = head;
-				//prnt_all_vect();
 				mosq_nxt_stg(_RNG_P);// checkimg if mosquito forwards to next stage like from egg to larve
 				std::sort(male_vector.begin(), male_vector.end(), comparePtrToNode);
 				std::sort(female_vector.begin(), female_vector.end(), comparePtrToNode);
 				std::sort(egg_vector.begin(), egg_vector.end(), comparePtrToNode);
 				std::sort(larve_vector.begin(), larve_vector.end(), comparePtrToNode);
 				std::sort(pupe_vector.begin(), pupe_vector.end(), comparePtrToNode);
-				prnt_all_vect();
+				// prnt_all_vect();
 
 				// for all mosquitos
 				curr_mosq = head;
@@ -1608,7 +1629,7 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 					cout << "\n\n\n\n\n\n no adult mosqitoes left for mating\n";
 				}
 
-				prnt_all_vect();
+				// prnt_all_vect();
 
 				if (egg_vector.size() > env_1.max_egg_cap) {
 					egg_id_coll_and_shuff();
@@ -2150,8 +2171,6 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 		//--checking--file_counter++;
 
 		cout << "\n files in write";
-		//write_double_CSV(larve_ratio, "data.csv");
-		//write_csv("ratios.csv", ratios);
 		write_d_csv("data1.csv", ratios);
 		cout << "\n files in writing completed";
 		male_count.clear();
@@ -3045,7 +3064,7 @@ void read_emperical_data_frm_csv(string filename) {
 	file.close();
 }
 
-void read_emperical_monthly_data_frm_csv(string filename, vector <int>& emp_data_year_number, vector<int>& emp_data_month_number, vector<int>& emp_data_monthly_female, vector <int>& emp_data_monthly_row_count) {
+void read_imperical_monthly_data_frm_csv(string filename, vector <int>& emp_data_year_number, vector<int>& emp_data_month_number, vector<int>& emp_data_monthly_female, vector <int>& emp_data_monthly_row_count) {
 	string filePath = filename;
 
 	// file should contain in this order only year,month and value

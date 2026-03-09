@@ -63,7 +63,7 @@ struct mosq_vars {
 	int max_mcmc_cand_reject_cap;
 	int model_start_day;
 	string weekly_mcmc_female_file_path;
-	string monthly_emperical_data_file_path;
+	string monthly_imperical_data_file_path;
 	string model_monthly_female_file_path_output;
 	int model_start_year;
 	int all_years_max_emp_year_month_row_count_value = 0;

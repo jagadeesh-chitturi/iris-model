@@ -139,7 +139,7 @@ void MCMC_csv_writer();
 void weekly_MCMC_female_csv_writer(vector<int>& model_weekly_calc_female);
 
 //for reading monthly emperical data
-void read_emperical_monthly_data_frm_csv(string filename, vector <int>& emp_data_year_number, vector<int>& emp_data_month_number, vector<int>& emp_data_monthly_female, vector <int>& emp_data_monthly_row_count);
+void read_imperical_monthly_data_frm_csv(string filename, vector <int>& emp_data_year_number, vector<int>& emp_data_month_number, vector<int>& emp_data_monthly_female, vector <int>& emp_data_monthly_row_count);
 bool isLeapYear(int year);
 int getMonthFromDay(int dayNumber, int year);
 int get_adult_female_count();

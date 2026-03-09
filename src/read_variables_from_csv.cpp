@@ -7,6 +7,17 @@
 using namespace std;
 
 
+/**
+ * @brief Function for reading variable values from CSV files.
+ *
+ * @param filename_csv Name of the CSV file to read from.
+ * @param env_1 Reference to the mosq_vars object to store the read values in.
+ *
+ * This function reads the values from the CSV file and assigns them to the variables in the env_1 object.
+ * The function also checks if the file can be opened and prints an error message if not.
+ * The function then reads the values from the CSV file and assigns them to the variables in the env_1 object.
+ * The function finally prints out the values that were read from the CSV file.
+ */
 void read_variables(string filename_csv,mosq_vars& env_1) //function for reading varible values from CSV files.
 {
 	string fname;
@@ -29,7 +40,7 @@ void read_variables(string filename_csv,mosq_vars& env_1) //function for reading
 		cout << "Could not open the file\n";
 
 
-	//assigning values to env variables
+	//reading positional values from csv file and assigning to variables in env_1 
 	cout << "\n starting to read data from CSV";
 
 	env_1.initial_mosqs = stoi(vals.at(1));
@@ -90,7 +101,7 @@ void read_variables(string filename_csv,mosq_vars& env_1) //function for reading
 	env_1.mcmc_outputfile_path = (string)(vals.at(111));
 	env_1.max_mcmc_cand_reject_cap = stoi(vals.at(113));
 	env_1.weekly_mcmc_female_file_path = (string)(vals.at(115));
-	env_1.monthly_emperical_data_file_path = (string)(vals.at(117));
+	env_1.monthly_imperical_data_file_path = (string)(vals.at(117));
 	env_1.model_monthly_female_file_path_output = (string)(vals.at(119));
 	env_1.model_start_year = stoi(vals.at(121));
 	env_1.all_years_max_emp_year_month_row_count_value = stoi(vals.at(123));

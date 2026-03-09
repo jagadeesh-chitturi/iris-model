@@ -30,7 +30,7 @@ int mosq_count = 0;
 //--checking--int file_counter = 0;
 int global_zero_mosq = 0;
 
-struct Parameters* p2;
+//struct Parameters* p2;
 
 
 
@@ -96,42 +96,42 @@ std::vector<std::string> column_names_vect;
 
 
 
-/////////////
-int main(int argc, char* argv[]) {			//	^^^^^^^^^^^^^^  also check the read_variables line below while changing this  //for calling program for python file 
-//int main(){								//  ^^^^^^^^^^^^^^	// for directly running through the visual studio
 
 
 
-	
+int main(int argc, char* argv[]) {	// 	main function to run the model and takes path to the input csv file from argv[1]
+
+	// to check the runtime of the model for efficiency tracking
 	auto start_time_main_bfor_MCMC = std::chrono::high_resolution_clock::now();
 
 	//reading files.
 	cout << "\n variables read..";
 	read_variables(argv[1],env_1); //to read input variables from csv file through arguments
-	//read_variables("D:/CEPH_LAB/AGB_Final_analysis/outputs/Sample_test_2022/variables_0.0_59_7_180.csv", env_1);
+
 	cout << "\n reading of variables completed";
 
 	// checking if initial eggs are greater than zero
 	if (env_1.initial_mosqs < 0) {
-		cout << "\n\n\n initial mosquitoes are less than zero.... so stoping program";
+		cout << "\n initial mosquitoes are less than zero. so stoping program";
 		return 0;
 	}
 
-	// for reading monthly emperical data
+	// for reading monthly imperical data
 	vector <int> emp_data_monthly_female;
 	vector <int> emp_data_month_number;
 	vector <int> emp_data_year_number;
 	vector <int> emp_data_monthly_row_count;
 
-	// read emperical data if it is mcmc simulation
+	// if it is mcmc simulation, read imperical data for likelihood calculation and then run MCMC, else run the model with CC vals from csv file.
 	if (env_1.is_mcmc_simulation == 1) {
-		read_emperical_monthly_data_frm_csv(env_1.monthly_emperical_data_file_path, emp_data_year_number, emp_data_month_number, emp_data_monthly_female, emp_data_monthly_row_count);
+		read_imperical_monthly_data_frm_csv(env_1.monthly_imperical_data_file_path, emp_data_year_number, emp_data_month_number, emp_data_monthly_female, emp_data_monthly_row_count);
 		cout << "\n month numbers are and emperical values are: ";
 		for (int icheck = 0; icheck < emp_data_month_number.size(); icheck++) {
 			cout << "\n " << emp_data_year_number[icheck] << "\t" << emp_data_month_number[icheck] << " ---- " << emp_data_monthly_female[icheck] << "\t" << emp_data_monthly_row_count[icheck];
 		}
 	}
-	//for CC and dates reading 
+
+	//for Carrying capacity(CC) and dates reading 
 	std::vector<string> vect_CC_list;
 	std::vector<string> vect_date_string_start;
 	std::vector<std::chrono::system_clock::time_point> date_vector_start;
@@ -142,6 +142,7 @@ int main(int argc, char* argv[]) {			//	^^^^^^^^^^^^^^  also check the read_vari
 	cout << "\n reading care_cap and dates is done\n";
 
 	// checking epoch values of cc and dates file
+	// for start date of carrying capacity to allign with model start date using epoch time
 	std::time_t start_date_CC_for_epoch = std::chrono::system_clock::to_time_t(date_vector_start.at(0));
 	std::tm* local_time_start_date_for_epoch = std::gmtime(&start_date_CC_for_epoch);
 	std::cout << "\n the start date is: " << std::put_time(local_time_start_date_for_epoch, "%d-%m-%Y") << " ";
@@ -152,13 +153,13 @@ int main(int argc, char* argv[]) {			//	^^^^^^^^^^^^^^  also check the read_vari
 	std::cout << "\n the end date is: " << std::put_time(local_time_end_date_for_epoch, "%d-%m-%Y") << " ";
 	std::cout << "\nEpoch end date value in main is: " << end_date_CC_for_epoch << std::endl;
 
-	// for temp and date storing.
+	// to store date and temperature values read from csv.
 	vector<double> vect_temp;
 	vector<string> vect_date_string;
 	vector<std::chrono::system_clock::time_point> date_vector;
 
-
-	import_date_and_temp_data(env_1.miami_temperature_file_path.c_str(), vect_date_string, vect_temp, date_vector);		//to read temp and dates
+	//to read temperature and dates
+	import_date_and_temp_data(env_1.miami_temperature_file_path.c_str(), vect_date_string, vect_temp, date_vector);		
 	cout << "\n the number of temp readings are : " << env_1.num_of_temperature_values << endl;
 
 	for (auto ir = vect_temp.rbegin(); ir != vect_temp.rend(); ++ir)
@@ -169,19 +170,16 @@ int main(int argc, char* argv[]) {			//	^^^^^^^^^^^^^^  also check the read_vari
 
 	cout << "\n the number of temp readings are : " << env_1.num_of_temperature_values << endl;
 
-	if (env_1.is_mcmc_simulation == true) { //mcmc model is running and creating values from MCMC
-		//run MCMC
-		//env_mcmc.std_deviation = 0.5;
-		// weekly emperical datanot using any more
-		//read_emperical_data_frm_csv(env_1.emperical_data_file_path);
-
+	//checking if it is MCMC simulation or not, if yes then run MCMC, else run the model with CC vals from csv file.
+	if (env_1.is_mcmc_simulation == true) { 
 
 		//for first run
 		std::string temp_col_name;
-
 		using double_vector = std::vector<double>;
+		
 		cout << "\n the unique CC vals are: \n";
-		set<string> unique_CC_vals(vect_CC_list.begin(), vect_CC_list.end()); //set data_struc for getting unique values if CC's names
+		//set data_struc for getting unique values if CC's names
+		set<string> unique_CC_vals(vect_CC_list.begin(), vect_CC_list.end()); 
 		for (const auto& str : unique_CC_vals) {
 			std::cout << str << std::endl;
 		}
@@ -206,7 +204,7 @@ int main(int argc, char* argv[]) {			//	^^^^^^^^^^^^^^  also check the read_vari
 			env_mcmc.mcmc_values_map_vector[temp_col_name] = double_vector();
 		}
 
-		//vector for cc_vals // need to add manually
+		//vector for cc_vals from csv file for first run of MCMC
 		env_mcmc.mcmc_values_map_vector["CC_1"].push_back(env_1.CC_1);
 		env_mcmc.mcmc_values_map_vector["CC_2"].push_back(env_1.CC_2);
 		env_mcmc.mcmc_values_map_vector["CC_3"].push_back(env_1.CC_3);
@@ -225,7 +223,7 @@ int main(int argc, char* argv[]) {			//	^^^^^^^^^^^^^^  also check the read_vari
 		env_mcmc.std_dev_over_disp = env_1.std_dev_over_disp;
 
 
-		//making the initial values as candidate values
+		//making the initial values as candidate values for MCMC for first run
 		env_mcmc.cc1_cand = env_1.CC_1;
 		env_mcmc.cc2_cand = env_1.CC_2;
 		env_mcmc.cc3_cand = env_1.CC_3;
@@ -243,7 +241,7 @@ int main(int argc, char* argv[]) {			//	^^^^^^^^^^^^^^  also check the read_vari
 			cout << " \n -  " << CC_map[column_names_vect.at(num_cols_in_MCMC_csv - 1)].at(icheck);
 		}
 
-
+		//running the model for first run of MCMC with initial values from csv file
 		main_function_logic(vect_CC_list,vect_date_string_start,date_vector_start, vect_date_string_end,date_vector_end, vect_temp, vect_date_string, date_vector, emp_data_year_number, emp_data_month_number, emp_data_monthly_female,emp_data_monthly_row_count);
 
 		//checking if cand is nan or value
@@ -257,11 +255,10 @@ int main(int argc, char* argv[]) {			//	^^^^^^^^^^^^^^  also check the read_vari
 			cerr << "\ncaught runtime_error for NaN error: ..... it is negative infifnity" << e.what();
 		}
 
+		//Since it is first run, we will assign cand values to curr values and then start the MCMC iterations, for next runs, cand and curr values will be updated inside the RUN_MCMC function based on acceptance or rejection of candidate values.
 		//assigning cand to curr
 		env_mcmc.curr_like_lihod = env_mcmc.cand_like_lihod;
 
-		//
-		// 
 		cout << "\n\n\n\n updating MCMC values\n\n\n\n";
 
 
@@ -277,7 +274,7 @@ int main(int argc, char* argv[]) {			//	^^^^^^^^^^^^^^  also check the read_vari
 		cout << "\n " << env_mcmc.cc1_cand << "\t " << env_mcmc.cc1_curr << "\t " << env_mcmc.cc2_cand << "\t " << env_mcmc.cc2_curr << "\t " << env_mcmc.cc3_cand << "\t " << env_mcmc.cc3_curr << "\t " << env_mcmc.cc4_cand << "\t " << env_mcmc.cc4_curr << "\t " <<env_mcmc.cc5_cand << "\t " << env_mcmc.cc5_curr << "\t " << env_mcmc.eggs_cand << "\t " << env_mcmc.eggs_curr << "\t " << env_mcmc.over_disperssion_cand << "\t " << env_mcmc.over_disperssion_curr << "\t " << env_mcmc.cand_like_lihod << "\t " << env_mcmc.curr_like_lihod;
 
 
-
+		// writing the first run values to csv file before starting MCMC iterations
 		std::ofstream csvFile_mcmc_1st_run(env_1.mcmc_outputfile_path, ios::out);
 
 		if (!csvFile_mcmc_1st_run.is_open()) {
@@ -293,21 +290,16 @@ int main(int argc, char* argv[]) {			//	^^^^^^^^^^^^^^  also check the read_vari
 		csvFile_mcmc_1st_run.close();
 
 
-
+		//Starting MCMC iterations
 		for(int mcmc_iter=1;mcmc_iter<env_1.num_mcmc_iters;mcmc_iter++){
 
 			env_mcmc.itr_num = mcmc_iter;
-
-			
-			
-
 			RUN_MCMC(vect_CC_list, vect_date_string_start, date_vector_start, vect_date_string_end, date_vector_end, vect_temp, vect_date_string, date_vector, emp_data_year_number, emp_data_month_number, emp_data_monthly_female, emp_data_monthly_row_count);
 			cout << "\n " <<env_mcmc.itr_num<<"\t" << env_mcmc.cc1_cand << "\t " << env_mcmc.cc1_curr << "\t " << env_mcmc.cc2_cand << "\t " << env_mcmc.cc2_curr << "\t " << env_mcmc.cc3_cand << "\t " << env_mcmc.cc3_curr << "\t " << env_mcmc.cc4_cand << "\t " << env_mcmc.cc4_curr << "\t " << env_mcmc.eggs_cand << "\t " << env_mcmc.eggs_curr << "\t " << env_mcmc.over_disperssion_cand << "\t " << env_mcmc.over_disperssion_curr << "\t " << env_mcmc.cand_like_lihod << "\t " << env_mcmc.curr_like_lihod;
 			if (global_zero_mosq == 1) {// try catch throw : when there are zero mosq, this will exit the loop and send data to files.
 				cout << "\n exiting the MAIN function as RUN_mcmc has values that leads to early death of mosquiotes\n";
 			}
 			MCMC_csv_writer();
-
 
 			// testing monthly
 			cout << "\n after the " << env_mcmc.itr_num << " ---is :\n";
@@ -316,9 +308,6 @@ int main(int argc, char* argv[]) {			//	^^^^^^^^^^^^^^  also check the read_vari
 			}
 			
 		}
-
-		
-
 	}
 	else {
 		read_CC_vals_by_map(column_names_vect, CC_map);
@@ -329,5 +318,3 @@ int main(int argc, char* argv[]) {			//	^^^^^^^^^^^^^^  also check the read_vari
 	auto duration = std::chrono::duration_cast<std::chrono::seconds>(end_time_main_after_MCMC - start_time_main_bfor_MCMC);
 	cout << "\n the time to run entire MCMC iters :" << duration.count() << " seconds";
 }
-
-/// check eggs random val before taking in

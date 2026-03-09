@@ -13,7 +13,7 @@ def run_cpp_with_args(args):
     
     # Move up one level to the project root and then into the build folder
     # This creates: D:\CEPH_LAB\gmm-model-project\build\Debug\mosquito_sim.exe
-    cpp_executable = os.path.join(script_dir, "..", "build", "Debug", "mosquito_sim.exe")
+    cpp_executable = os.path.join(script_dir, "..", "build", "Release", "mosquito_sim.exe")
     
     # Normalize the path for Windows (turns / into \)
     cpp_executable = os.path.normpath(cpp_executable)
@@ -48,8 +48,8 @@ for year_val in range(2019,intervention_start_year):
     else:
         days_before_intervention_start_year += 365
 
-num_sims_to_run=10
-experiment_sub_folder=f"test_2026_1/sensitivity/trails_starting_{intervention_start_year}/all_months_1_2_4_ratios"
+num_sims_to_run=100
+experiment_sub_folder=f"test_2026_re/sensitivity/trails_starting_{intervention_start_year}/all_months_1_2_4_ratios"
 sim_output_file_path=f"D:/CEPH_LAB/mosquito_simulation_starting_2022_output_files/ordered_mcmc_analysis/ordered_MCMC_seed_controlled_outputs/{experiment_sub_folder}/"
 # Check if the folder exists
 if os.path.exists(sim_output_file_path) and os.path.isdir(sim_output_file_path):
