@@ -6,20 +6,16 @@
 
 static gsl_rng* _RNG_P;
 
-/*************  ✨ Windsurf Command ⭐  *************/
-/**
+/************* 
  * @brief Adds a mosquito to the environment
- *
  * @details This function adds a mosquito or egg to the environment.
  * It updates the status of the mosquito and adds it to the correct
  * vector based on its status.
- *
  * @param new_status The status of the mosquito (0 = egg, 1 = larva, 2 = pupa, 3 = adult)
  * @param is_female_new Whether the mosquito is female or not
  * @param is_treated_new Whether the mosquito has been treated or not
  * @param is_mated_new Whether the mosquito has mated or not
  * @param gene_stat_new The status of the mosquito's genes (0 = wild, 1 = resistant, 2 = susceptible)
- */
 
 /*******  f1ff6505-d994-419c-a382-01d0a42ab083  *******/	
 void add_mosq(int new_status, bool is_female_new, bool is_treated_new, bool is_mated_new, int gene_stat_new) { //adds mosquioes or eggs to the environment
@@ -86,17 +82,14 @@ void add_mosq(int new_status, bool is_female_new, bool is_treated_new, bool is_m
 // 	prnt_vectr(pupe_vector, "Pupe");*/
 // }
 
-
-
 /**
  * @brief Shows the mosquito linked list
- *
  * @details This function prints all the mosquito details in the linked list.
  * It shows the total population of all mosquitoes, the number of male, female, egg, larve, and pupe mosquitoes.
  * If the linked list is empty, it prints a message saying so.
  * It then prints the mosquito ID, stage, is_female status, treated status, and mated status for each mosquito in the linked list.
  * Finally, it prints the mosquito ID of the head and last mosquito in the linked list.
- */
+ * */
 void show_mosqs() { //printing mosquito linked list
 	struct mosq* ptr;
 	cout << "\n ********** entered mosquito showwww ***********";
@@ -153,7 +146,15 @@ std::string doubleToString(double value) {
 // 	file.close();
 // }
 
-
+/*
+ * @brief Write a CSV file from a dataset
+ * @details This function makes a CSV file columns of integer values of mosquito population on each day in model.
+ * Each column of data is represented by the pair <column name, column data> as std::pair<std::string, std::vector<int>>.
+ * The dataset is represented as a vector of these columns.
+ * Note that all columns should be the same size.
+ * @param filename The name of the file to write to.
+ * @param dataset The dataset to write to the file.
+ * */
 void write_csv(std::string filename, std::vector<std::pair<std::string, std::vector<int>>> dataset) {
 	// Make a CSV file with one or more columns of integer values
 	// Each column of data is represented by the pair <column name, column data>
@@ -187,39 +188,45 @@ void write_csv(std::string filename, std::vector<std::pair<std::string, std::vec
 	myFile.close();
 }
 
-void write_d_csv(std::string filename, std::vector<std::pair<std::string, std::vector<double>>> dataset) {
-	// Make a CSV file with one or more columns of integer values
-	// Each column of data is represented by the pair <column name, column data>
-	//   as std::pair<std::string, std::vector<int>>
-	// The dataset is represented as a vector of these columns
-	// Note that all columns should be the same size
+// void write_d_csv(std::string filename, std::vector<std::pair<std::string, std::vector<double>>> dataset) {
+// 	// Make a CSV file with one or more columns of integer values
+// 	// Each column of data is represented by the pair <column name, column data>
+// 	//   as std::pair<std::string, std::vector<int>>
+// 	// The dataset is represented as a vector of these columns
+// 	// Note that all columns should be the same size
 
-	// Create an output filestream object
-	std::ofstream myFile(filename);
+// 	// Create an output filestream object
+// 	std::ofstream myFile(filename);
 
-	// Send column names to the stream
-	for (int j = 0; j < dataset.size(); ++j)
-	{
-		myFile << dataset.at(j).first;
-		if (j != dataset.size() - 1) myFile << ","; // No comma at end of line
-	}
-	myFile << "\n";
+// 	// Send column names to the stream
+// 	for (int j = 0; j < dataset.size(); ++j)
+// 	{
+// 		myFile << dataset.at(j).first;
+// 		if (j != dataset.size() - 1) myFile << ","; // No comma at end of line
+// 	}
+// 	myFile << "\n";
 
-	// Send data to the stream
-	for (int i = 0; i < dataset.at(0).second.size(); ++i)
-	{
-		for (int j = 0; j < dataset.size(); ++j)
-		{
-			myFile << dataset.at(j).second.at(i);
-			if (j != dataset.size() - 1) myFile << ","; // No comma at end of line.
-		}
-		myFile << "\n";
-	}
+// 	// Send data to the stream
+// 	for (int i = 0; i < dataset.at(0).second.size(); ++i)
+// 	{
+// 		for (int j = 0; j < dataset.size(); ++j)
+// 		{
+// 			myFile << dataset.at(j).second.at(i);
+// 			if (j != dataset.size() - 1) myFile << ","; // No comma at end of line.
+// 		}
+// 		myFile << "\n";
+// 	}
 
-	// Close the file
-	myFile.close();
-}
+// 	// Close the file
+// 	myFile.close();
+// }
 
+/**
+ * @brief Check if a mosquito will die or not based on its status and the death probability of that status. It also removes the mosquito from the linked list and the corresponding vector if it dies.
+ * @details This function checks if the mosquito will die or not based on its status and the death probability of that status. It also removes the mosquito from the linked list and the corresponding vector if it dies.
+ * @param[in] _RNG_P Pointer to the GSL random number generator
+ * @return void
+ * */
 void will_mosq_die(gsl_rng* _RNG_P) {
 	float status_death_prob;
 	int m_die_vect_cntr = -1;
@@ -232,6 +239,7 @@ void will_mosq_die(gsl_rng* _RNG_P) {
 
 	cout << "M_E value is \n" << env_1.egg_death_prob << "\n" << env_1.larve_death_prob << "\n" << env_1.pupe_death_prob << "\n" << env_1.female_death_prob << "\n\n\n";
 
+	//checking death of all mosquitos in the list except last one to avoid error of null pointer while checking next of last mosq
 	while (temp != NULL) {
 		total_pop = egg_vector.size() + larve_vector.size() + pupe_vector.size() + male_vector.size() + female_vector.size();
 		if (total_pop < 2) {
@@ -239,8 +247,6 @@ void will_mosq_die(gsl_rng* _RNG_P) {
 			cout << "\n\n\n\n zero mosqutoes alive in 1st try: \n\n\n\n";
 			return;
 		}
-
-
 
 		switch (curr_mosq->status) {
 		case 0:
@@ -321,10 +327,7 @@ void will_mosq_die(gsl_rng* _RNG_P) {
 	}//while loop
 
 	//--------------for last mosq in list---------
-	//checking death of last mosquito in the list
-
-
-
+	//checking death of last mosquito in the list to avoid error of null pointer while checking next of last mosq
 	//updating the indiv counters
 	switch (curr_mosq->status) {
 	case 0:
@@ -395,8 +398,12 @@ void will_mosq_die(gsl_rng* _RNG_P) {
 	}
 
 }
-
-void mosq_nxt_stg(gsl_rng* _RNG_P) {
+/*
+ * @brief This function checks if a mosquito is ready for the next stage and if it is, it adds it to the next stage vector and removes it from the current stage vector and updates the status in linked list
+ * @param[in] _RNG_P pointer to the GSL random number generator
+ * @return void
+ */
+void mosq_nxt_stg(gsl_rng* _RNG_P) { // This check if a mosquito is ready for the next stage and if it is, it adds it to the next stage vector and removes it from the current stage vector and updates the status in linked list
 	float status_next_stage_prob;
 	int m_die_vect_cntr = -1;
 	int f_die_vect_cntr = -1;
@@ -469,7 +476,12 @@ void mosq_nxt_stg(gsl_rng* _RNG_P) {
 	}
 }
 
-void female_mating(gsl_rng* _RNG_P) {
+/*
+ * @brief This function checks if a Adult female mosquito is ready for mating and if it is, it checks if it finds a male and if it does, it mates with it and adds the offspring based on male type to the environment.
+ * It also checks if the female mosquito has found a male and if it has, it checks if the mating was successful or not and if it was, it adds the offspring to the environment based on the type of the male mosquito.
+ * @param[in] _RNG_P pointer to the GSL random number generator
+ */
+void female_mating(gsl_rng* _RNG_P) { // This function checks if a Adult female mosquito is ready for mating and if it is, it checks if it finds a male and if it does, it mates with it and adds the offspring based on male type to the environment.
 	int linear_egg_flag = 0;
 	double linear_egg_prob = (double)((double)1.0 - ((double)env_1.global_egg_count / (double)env_1.linear_egg_cap)); //global egg count is initally zero as there are no eggs at start of loop
 	cout << "\n-------------- in female mating";
@@ -543,8 +555,11 @@ void female_mating(gsl_rng* _RNG_P) {
 
 }
 
-
-void larve_id_coll_and_shuff() {
+/*
+ * @brief This function collects the larve ids from the list and shuffles them to kill excess larve if the larve population is greater than the max larve capacity of the environment
+ * @details It collects all the larve ids from the list and if the larve population is greater than the max larve capacity of the environment, it shuffles the collected ids and kills the excess larve to maintain the max larve capacity
+ */
+void larve_id_coll_and_shuff() { // this function is for collecting larve ids and shuffle them to kill excess larve if the larve population is greater than the max larve capacity of the environment
 	curr_mosq = head;
 	prev_mosq = head;
 	larve_ids.clear();
@@ -557,6 +572,10 @@ void larve_id_coll_and_shuff() {
 	}
 }
 
+/*
+ * @brief This function collects the egg ids from the list and shuffles them to kill excess eggs if the egg population is greater than the max egg capacity of the environment
+ * @details It collects all the egg ids from the list and if the egg population is greater than the max egg capacity of the environment, it shuffles the collected ids and kills the excess eggs to maintain the max egg capacity
+ */
 void egg_id_coll_and_shuff() {
 	curr_mosq = head;
 	prev_mosq = head;
@@ -654,7 +673,7 @@ void kill_excess_larve(gsl_rng* _RNG_P) {
 }
 
 
-void kill_excess_eggs(gsl_rng* _RNG_P) {
+void kill_excess_eggs(gsl_rng* _RNG_P) {//
 	int e_die_vect_cntr = -1;
 	curr_mosq = head;
 	prev_mosq = head;
@@ -749,70 +768,70 @@ void kill_excess_eggs(gsl_rng* _RNG_P) {
 
 
 
-void kill_excess_rndm_eggs(gsl_rng* _RNG_P) {// function to kill random eggs based on proportion of male RR and RD amd female
+// void kill_excess_rndm_eggs(gsl_rng* _RNG_P) {// function to kill random eggs based on proportion of male RR and RD amd female
 
-	//adult=3,0=male,is_treated=0, is_mated=0, gene_stat=0 RR /1 DR
+// 	//adult=3,0=male,is_treated=0, is_mated=0, gene_stat=0 RR /1 DR
 
-	int e_die_vect_cntr = -1;
-	curr_mosq = head;
-	prev_mosq = head;
-	int egg_counter = -1; // to keep track for iteration in loop to start killing
-	int arr_size = egg_ids.size();
-	int* egg_id_array = egg_ids.data();
-	int mosq_id_check = 0;
-	cout << "\nbefore shuffle\n";
+// 	int e_die_vect_cntr = -1;
+// 	curr_mosq = head;
+// 	prev_mosq = head;
+// 	int egg_counter = -1; // to keep track for iteration in loop to start killing
+// 	int arr_size = egg_ids.size();
+// 	int* egg_id_array = egg_ids.data();
+// 	int mosq_id_check = 0;
+// 	cout << "\nbefore shuffle\n";
 
 
-	gsl_ran_shuffle(_RNG_P, egg_id_array, arr_size, sizeof(int));
+// 	gsl_ran_shuffle(_RNG_P, egg_id_array, arr_size, sizeof(int));
 
-	cout << "\nafter shuffle\n";
+// 	cout << "\nafter shuffle\n";
 
-	while (curr_mosq->next != NULL) {
+// 	while (curr_mosq->next != NULL) {
 
-		if (curr_mosq->status == 0) {
+// 		if (curr_mosq->status == 0) {
 
-			for (int i = 0; i < env_1.max_egg_cap; i++) {
-				if (curr_mosq->mosq_id == egg_id_array[i]) { //safe mosq
-					mosq_id_check = 1;
-					break;
-				}
-			}
+// 			for (int i = 0; i < env_1.max_egg_cap; i++) {
+// 				if (curr_mosq->mosq_id == egg_id_array[i]) { //safe mosq
+// 					mosq_id_check = 1;
+// 					break;
+// 				}
+// 			}
 
-			e_die_vect_cntr++;
+// 			e_die_vect_cntr++;
 
-			if (mosq_id_check == 1) {//mosq is in safe list
+// 			if (mosq_id_check == 1) {//mosq is in safe list
 
-				mosq_id_check = 0;
-				prev_mosq = curr_mosq;
-				curr_mosq = curr_mosq->next;
-			}
-			else {
-				if (curr_mosq == head) {
-					head = head->next;
-					delete curr_mosq;
-					curr_mosq = head;
-					prev_mosq = head;
-				}
-				else {
-					prev_mosq->next = curr_mosq->next;
-					delete curr_mosq;
-					curr_mosq = prev_mosq->next;
+// 				mosq_id_check = 0;
+// 				prev_mosq = curr_mosq;
+// 				curr_mosq = curr_mosq->next;
+// 			}
+// 			else {
+// 				if (curr_mosq == head) {
+// 					head = head->next;
+// 					delete curr_mosq;
+// 					curr_mosq = head;
+// 					prev_mosq = head;
+// 				}
+// 				else {
+// 					prev_mosq->next = curr_mosq->next;
+// 					delete curr_mosq;
+// 					curr_mosq = prev_mosq->next;
 
-				}
+// 				}
 
-				egg_vector.erase(egg_vector.begin() + e_die_vect_cntr);
-				e_die_vect_cntr--;
-			}
+// 				egg_vector.erase(egg_vector.begin() + e_die_vect_cntr);
+// 				e_die_vect_cntr--;
+// 			}
 
-		}
+// 		}
 
-		else {
-			prev_mosq = curr_mosq;
-			curr_mosq = curr_mosq->next;
-		}
+// 		else {
+// 			prev_mosq = curr_mosq;
+// 			curr_mosq = curr_mosq->next;
+// 		}
 
-	}
-}
+// 	}
+// }
 
 
 void deleteList(mosq*& del_head) { //to delete entire linked list
@@ -1195,9 +1214,10 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 
 	std::time_t end_date_CC_for_epoch = std::chrono::system_clock::to_time_t(date_vector_end.at(0));
 	std::tm* local_time_end_date_for_epoch = std::gmtime(&end_date_CC_for_epoch);
-	std::cout << "\n the end date is: " << std::put_time(local_time_end_date_for_epoch, "%d-%m-%Y") << " ";
-	std::cout << "\nEpoch end date value in main is: " << end_date_CC_for_epoch << std::endl;
+	std::cout << "\n the end date is:: " << std::put_time(local_time_end_date_for_epoch, "%d-%m-%Y") << " ";
+	std::cout << "\nEpoch end date value in main is:: " << end_date_CC_for_epoch << std::endl;
 
+	cout << "\n the number of rows in MCMC csv is: ";
 	//read_CC_vals_by_map(column_names_vect, CC_map);
 	string temp_col_name;
 	temp_col_name = column_names_vect.at(0);
@@ -2171,7 +2191,7 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 		//--checking--file_counter++;
 
 		cout << "\n files in write";
-		write_d_csv("data1.csv", ratios);
+		// write_d_csv("data1.csv", ratios);
 		cout << "\n files in writing completed";
 		male_count.clear();
 		male_count.erase(male_count.begin(), male_count.end());
@@ -3321,7 +3341,7 @@ void monthly_MCMC_female_csv_writer(map<int, map<int, int>>& model_year_month_va
 				csvFile << ",";
 			}
 		}
-	}
+	}							
 	else {
 		for (int iyear = start_mon_year.year; iyear <= end_mon_year.year; iyear++) {
 			if (iyear == end_mon_year.year) {

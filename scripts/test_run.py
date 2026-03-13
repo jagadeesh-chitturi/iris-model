@@ -5,6 +5,21 @@ from datetime import datetime
 import subprocess
 import os
 import numpy as np
+from dotenv import load_dotenv
+import shutil
+
+
+load_dotenv()  # Load environment variables from .env file
+
+path_root = os.getenv("PROJECT_ROOT")
+if path_root is None:
+    raise Exception("PROJECT_ROOT environment variable is not set.")
+
+root_output_path = os.getenv("OUTPUT_DIR")
+if root_output_path is None:
+    raise Exception("OUTPUT_DIR environment variable is not set.")
+
+inputs_folder_path = path_root + "/data/inputs/model_in/constant_release_trial_in/"
 
 
 def run_cpp_with_args(args):
@@ -49,8 +64,8 @@ for year_val in range(2019,intervention_start_year):
         days_before_intervention_start_year += 365
 
 num_sims_to_run=100
-experiment_sub_folder=f"test_2026_re/sensitivity/trails_starting_{intervention_start_year}/all_months_1_2_4_ratios"
-sim_output_file_path=f"D:/CEPH_LAB/mosquito_simulation_starting_2022_output_files/ordered_mcmc_analysis/ordered_MCMC_seed_controlled_outputs/{experiment_sub_folder}/"
+experiment_sub_folder=f"test_2026_larve_ciding_sorted/sensitivity/trails_starting_{intervention_start_year}/all_months_1_2_4_ratios"
+sim_output_file_path=root_output_path+f"/{experiment_sub_folder}/"
 # Check if the folder exists
 if os.path.exists(sim_output_file_path) and os.path.isdir(sim_output_file_path):
     # Raise an exception if the folder exists
@@ -70,15 +85,15 @@ month_names_list = [
 ]
 
 
-df=pd.read_csv(r"D:\CEPH_LAB\mosquito_simulation_starting_2022_output_files\ordered_mcmc_analysis\required_ordered_mcmc_docs\constant_scenario_cpp_input_files\variables_2019_2023_monthly_agg.csv",header=None)
+df=pd.read_csv(inputs_folder_path+"model_input_config.csv",header=None)
 ndf=df.copy()
 
 # input file paths
-miami_temperature_file_path = "D:/CEPH_LAB/mosquito_simulation_starting_2022_output_files/ordered_mcmc_analysis/required_ordered_mcmc_docs/constant_scenario_cpp_input_files/19_23_temperature_altered.csv"
-miami_carrying_capacity_dates_file_path = "D:/CEPH_LAB/mosquito_simulation_starting_2022_output_files/ordered_mcmc_analysis/required_ordered_mcmc_docs/constant_scenario_cpp_input_files/Miami_carryingcapacity_dates.csv"
-miami_mcmc_file_path = "D:/CEPH_LAB/mosquito_simulation_starting_2022_output_files/ordered_mcmc_analysis/required_ordered_mcmc_docs/constant_scenario_cpp_input_files/ordered_rand_100_mcmc.csv"
+miami_temperature_file_path = inputs_folder_path + "miami_2019_2023_temperature_celsius.csv"
+miami_carrying_capacity_dates_file_path = inputs_folder_path + "Miami_carrying_capacity_dates.csv"
+miami_mcmc_file_path = inputs_folder_path + "random_mcmc_carrying_capacity_100_vals.csv"
 
-constant_scenario_surveillance_100_sims_file_path="D:/CEPH_LAB/mosquito_simulation_starting_2022_output_files/ordered_mcmc_analysis/required_ordered_mcmc_docs/constant_scenario_cpp_input_files/supporting_files/sens_2020_2021/2021_each_month_60_day_surveillance_100_sims_vals"
+constant_scenario_surveillance_100_sims_file_path = inputs_folder_path+"supporting_files/sens_2020_2021/2021_each_month_60_day_surveillance_100_sims_vals"
 is_non_constant_scenario=0
 
 # Collection factor
@@ -123,6 +138,8 @@ for insertion_ratio in insertion_ratios:
                 fi_name=f"{insertion_ratio}_{eq}_{freq}_{dur}"
                 new_folder_path=sim_output_file_path+fi_name
                 ndf.iloc[27,1]=new_folder_path+'/'
+                ndf.iloc[55,1]='/' # placeholder for mcmc output file path which is not needed for this test run
+
 
                 # Create the folder
                 os.makedirs(new_folder_path)

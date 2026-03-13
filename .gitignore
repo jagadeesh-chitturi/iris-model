@@ -24,3 +24,6 @@ Thumbs.db
 # IDE specific
 .vs/
 .vscode/
+
+# This folder and files can be deleted
+scratch_tests_folder/
