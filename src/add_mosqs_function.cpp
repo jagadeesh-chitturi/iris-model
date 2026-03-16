@@ -990,6 +990,13 @@ int_gsl_seed seed_gsl_random_generator(int_gsl_seed seed) {
 }
 
 
+/**
+ * RUN_MCMC: main MCMC function that will run the MCMC chain based on the given data.
+ * It will generate new candidates, check if they are valid and run the model.
+ * If the candidate is valid it will update the MCMC values and write the data to csv file.
+ * If the candidate is invalid it will reject the iteration and increase the rejection counter.
+ * When the rejection counter reaches the maximum cap, it will update the MCMC values with the latest valid candidate and reset the rejection counter.
+ */
 void RUN_MCMC(std::vector<string>& vect_CC_list, std::vector<string>& vect_date_string_start, std::vector<std::chrono::system_clock::time_point>& date_vector_start, std::vector<string>& vect_date_string_end, std::vector<std::chrono::system_clock::time_point>& date_vector_end, vector<double>& vect_temp, vector<string>& vect_date_string, vector<std::chrono::system_clock::time_point>& date_vector, vector <int>& emp_data_year_number, vector <int>& emp_data_month_number, vector <int>& emp_data_monthly_female, vector <int>& emp_data_monthly_row_count) {
 
 	//env_mcmc.mcmc_values_map_vector["CC_1"].push_back(137.413952);
@@ -1033,15 +1040,9 @@ void RUN_MCMC(std::vector<string>& vect_CC_list, std::vector<string>& vect_date_
 
 	//avoiding useless rejects
 	if (env_mcmc.mcmc_cand_reject_cntr == env_1.max_mcmc_cand_reject_cap) {
-		env_mcmc.cand_like_lihod = env_mcmc.curr_like_lihod;
-
-		//
-		// 
+		env_mcmc.cand_like_lihod = env_mcmc.curr_like_lihod; 
 		cout << "\n\n\n\n updating MCMC values after many rejections\n\n\n\n";
 
-
-		//updating other curr vals
-		//updating other curr vals
 		//updating other curr vals
 		env_mcmc.cc1_cand = env_mcmc.cc1_curr;
 		env_mcmc.cc2_cand = env_mcmc.cc2_curr;
@@ -1100,7 +1101,7 @@ void RUN_MCMC(std::vector<string>& vect_CC_list, std::vector<string>& vect_date_
 	}
 
 
-	//add func test validity of candidates
+
 //if cand is valid run model
 // else if invalid value 
 // ---make a note of the cand and curr and reject/skip the iteration 
@@ -1197,16 +1198,15 @@ void RUN_MCMC(std::vector<string>& vect_CC_list, std::vector<string>& vect_date_
 	//streaming data into csv file
 }
 
+/* This is where model runs for defined number of days and number of iterations for each day.
+	- This is the main function that runs the model for each MCMC candidate and generates the mosquito population count for each day of the simulation. 
+	- It will output daily mosquito population count and other details to csv file.
 
+
+*/
 void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>& vect_date_string_start, std::vector<std::chrono::system_clock::time_point>& date_vector_start, std::vector<string>& vect_date_string_end, std::vector<std::chrono::system_clock::time_point>& date_vector_end, vector<double>& vect_temp, vector<string>& vect_date_string, vector<std::chrono::system_clock::time_point>& date_vector, vector <int>& emp_data_year_number, vector <int>& emp_data_month_number, vector<int>& emp_data_monthly_female_main, vector <int>& emp_data_monthly_row_count) {
 	auto start_time_main = std::chrono::high_resolution_clock::now();
-	////read_variables(argv[1],env_1); //to read input variables from csv file through arguments
-	//read_variables("D:/CEPH_LAB/CPP_CEPH_lab/Mosquito_Stage_2/Mosquito_Stage_2/variables.csv", env_1);   //running through visual studio
-
-	//std::map<std::string, std::vector<double>> CC_map; //vector for storing  
-	//std::vector<std::string> column_names_vect;
-
-		// checking epoch values of cc and dates file
+	// checking epoch values of cc and dates file
 	std::time_t start_date_CC_for_epoch = std::chrono::system_clock::to_time_t(date_vector_start.at(0));
 	std::tm* local_time_start_date_for_epoch = std::gmtime(&start_date_CC_for_epoch);
 	std::cout << "\n the start date is: " << std::put_time(local_time_start_date_for_epoch, "%d-%m-%Y") << " ";
@@ -1230,57 +1230,15 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 	}
 	cout << endl;
 
-	////for CC and dates reading 
-	//std::vector<string> vect_CC_list;
-	//std::vector<string> vect_date_string_start;
-	//std::vector<std::chrono::system_clock::time_point> date_vector_start;
-
-	//std::vector<string> vect_date_string_end;
-	//std::vector<std::chrono::system_clock::time_point> date_vector_end;
-	//import_care_cap_and_dates_data(env_1.miami_carrying_capacity_dates_file_path.c_str(), vect_CC_list, vect_date_string_start, vect_date_string_end, date_vector_start, date_vector_end);
-
 	cout << "\n ------";
 	for (auto cc1 : vect_CC_list) {
 		std::cout << cc1 << '\n';
 	}
 	cout << "\n ------";
 
-	//// checking epoch values of cc and dates file
-	//std::time_t start_date_CC_for_epoch = std::chrono::system_clock::to_time_t(date_vector_start.at(0));
-	//std::tm* local_time_start_date_for_epoch = std::gmtime(&start_date_CC_for_epoch);
-	//std::cout << "\n the start date is: " << std::put_time(local_time_start_date_for_epoch, "%d-%m-%Y") << " ";
-	//std::cout << "\nEpoch start date value in main is: " << start_date_CC_for_epoch << std::endl;
-
-	//std::time_t end_date_CC_for_epoch = std::chrono::system_clock::to_time_t(date_vector_end.at(0));
-	//std::tm* local_time_end_date_for_epoch = std::gmtime(&end_date_CC_for_epoch);
-	//std::cout << "\n the end date is: " << std::put_time(local_time_end_date_for_epoch, "%d-%m-%Y") << " ";
-	//std::cout << "\nEpoch end date value in main is: " << end_date_CC_for_epoch << std::endl;
-
-
-
-
-	//// for temp and date storing
-	//std::vector<double> vect_temp;
-	//std::vector<string> vect_date_string;
-	//std::vector<std::chrono::system_clock::time_point> date_vector;
-
 	string file_names_list;
 
 	string temp_file_names;
-
-
-
-
-	//import_date_and_temp_data(env_1.miami_temperature_file_path.c_str(), vect_date_string, vect_temp, date_vector);		//to read temp and dates
-	//cout << "\n the number of temp readings are : " << env_1.num_of_temperature_values << endl;
-
-	//for (auto ir = vect_temp.rbegin(); ir != vect_temp.rend(); ++ir)
-	//{
-	//	//cout << *ir << " ";
-	//	env_1.num_of_temperature_values++;
-	//}
-
-	//cout << "\n the number of temp readings are : " << env_1.num_of_temperature_values << endl;
 
 	auto sim_start_time = std::chrono::high_resolution_clock::now();
 	cout << "\n simulation about to start";
@@ -1306,8 +1264,7 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 
 		//resetting the global variables for multiple simulations.
 		mosq_count = 0;
-		//--checking--pause_for_interupt;
-		//--checking--file_counter = 0;
+
 		global_zero_mosq = 0;
 
 		alloc_and_setup_gsl_random_generator();
@@ -1392,8 +1349,7 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 			std::time_t time = std::chrono::system_clock::to_time_t(date);
 			std::tm* local_time = std::gmtime(&time);
 
-			/*std::cout << "\n ----------today date from vector " << std::put_time(local_time, "%d-%m-%Y") << " ";
-			std::cout << "\nEpoch value from vector " << time;*/
+
 
 			// to store Caring Cap vals for each day from date_temps files in int vector
 			for (int start_date_i = 0; start_date_i < date_vector_start.size(); start_date_i++) {
@@ -1401,47 +1357,14 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 				std::time_t end_date_from_CC_dates = std::chrono::system_clock::to_time_t(date_vector_end.at(start_date_i));
 
 				std::tm* local_start_date_frm_CC_top = std::gmtime(&start_date_from_CC_dates);
-				/*std::cout << "\n\n\n\n start date range is " << std::put_time(local_start_date_frm_CC_top, "%d-%m-%Y") << " ";
-				cout << "\n start day epoch value is " << start_date_from_CC_dates;*/
-
-				/*std::cout << "\n today date is " << std::put_time(local_time, "%d-%m-%Y") << " ";
-				std::cout << "\nEpoch value is: " << time;*/
-
 
 				std::tm* local_end_date_frm_CC_top = std::gmtime(&end_date_from_CC_dates);
-				/*std::cout << "\n end date range is " << std::put_time(local_end_date_frm_CC_top, "%d-%m-%Y") << " ";
-				cout << "\n end day epoch value is " << end_date_from_CC_dates;*/
 
 				if (start_date_from_CC_dates <= time) {
-
-					/*cout << "\n inside if:";
-					std::cout << "\n today date is " << std::put_time(local_time, "%d-%m-%Y") << " ";
-					std::cout << "\nEpoch value is: " << time;*/
-
 					std::time_t time1 = std::chrono::system_clock::to_time_t(date);
 					std::tm* local_time_if = std::gmtime(&time1);
-					/*std::cout << "\n today date is if " << std::put_time(local_time_if, "%d-%m-%Y") << " ";
-					std::cout << "\nEpoch value is: if " << time1;*/
-
-					/*std::cout << "\n start date range is " << std::put_time(local_start_date_frm_CC_top, "%d-%m-%Y") << " ";
-					cout << "\n start day epoch value is " << start_date_from_CC_dates;*/
 					if (end_date_from_CC_dates >= time) {
 
-						/*cout << "\n inside 2nd if ";
-						std::cout << "\n today date is " << std::put_time(local_time, "%d-%m-%Y") << " ";
-						std::cout << "\nEpoch value is: " << time;
-
-						std::cout << "\n end date range is " << std::put_time(local_end_date_frm_CC_top, "%d-%m-%Y") << " ";
-						cout << "\n end day epoch value is " << end_date_from_CC_dates << endl;*/
-
-
-						//cout << "\n" << vect_CC_list.at(start_date_i);
-						//cout << "\n current date range is ";
-						//std::tm* local_start_date_frm_CC = std::gmtime(&start_date_from_CC_dates);
-						//std::cout << "\n start date is " << std::put_time(local_start_date_frm_CC, "%d-%m-%Y") << " ";
-
-						//std::tm* local_end_date_frm_CC = std::gmtime(&end_date_from_CC_dates);
-						//std::cout << "\n start date is " << std::put_time(local_end_date_frm_CC, "%d-%m-%Y") << " ";
 
 						for (int names_iter = 0; names_iter < column_names_vect.size() - 1; names_iter++) {
 							int cmp_output = (vect_CC_list.at(start_date_i)).compare(column_names_vect.at(names_iter));
@@ -1452,23 +1375,12 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 								cout << "\n\n cc_val selected is " << int(my_val);
 								cout << "\n day is: " << start_date_i;
 								all_dates_caring_cap_vector.push_back(int(my_val));
-
-								/*							cout << "\n" << vect_CC_list.at(start_date_i);
-															cout << "\n current date range is ";
-															std::tm* local_start_date_frm_CC = std::gmtime(&start_date_from_CC_dates);
-															std::cout << "\n start date range is " << std::put_time(local_start_date_frm_CC, "%d-%m-%Y") << " ";
-
-															std::tm* local_end_date_frm_CC = std::gmtime(&end_date_from_CC_dates);
-															std::cout << "\n end date range is " << std::put_time(local_end_date_frm_CC, "%d-%m-%Y") << " ";
-
-															std::cout << "\n today date is " << std::put_time(local_time, "%d-%m-%Y") << " ";*/
-
 							}
 						}
 					}
 				}
 			}
-			//cout << "\nfor loop exited";
+			
 		}
 
 		for (int icheck = 0; icheck < all_dates_caring_cap_vector.size(); icheck++) {
@@ -1478,23 +1390,9 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 		// show_mosqs();
 		int temp_female_cnt = get_adult_female_count();
 		cout << "\n the female count from func is " << temp_female_cnt;
-		//for (int i = 0; i < env_1.initial_mosqs; i++) {
-		//	//k = gsl_ran_bernoulli(_RNG_P, 0.50);  // stoping this as we are bringing all the mosquitos to a new environment
-		//	if (env_1.k == 1) {
-		//		env_1.gender_oc = gsl_ran_bernoulli(_RNG_P, env_1.gender_prob);
-		//		env_1.mate_oc = gsl_ran_bernoulli(_RNG_P, env_1.initial_mate_prob);
-		//		env_1.treated_oc = gsl_ran_bernoulli(_RNG_P, env_1.treated_prob);
-		//		if (env_1.gender_oc == 1) {
-		//			add_mosq(0, 0, 0, env_1.mate_oc, 0);
-		//		}
-		//		else {
-		//			add_mosq(0, 1, 0, env_1.mate_oc, 0);
-		//		}
-		//	}
-		//}
 
 
-		//function to create initial mosquitoes larve pupe and adults dated from email on 3rd july 2023
+		//function to create initial mosquitoes larve pupe and adults
 		create_initial_mosquitoes(initial_larve_agents_frm_ratio, initial_pupe_agents_frm_ratio, initial_adult_female_agents_frm_ratio, initial_adult_male_agents_frm_ratio, _RNG_P);
 
 
@@ -1649,7 +1547,6 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 					cout << "\n\n\n\n\n\n no adult mosqitoes left for mating\n";
 				}
 
-				// prnt_all_vect();
 
 				if (egg_vector.size() > env_1.max_egg_cap) {
 					egg_id_coll_and_shuff();
@@ -1688,14 +1585,6 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 				cout << "\n the value of weekly remainder" << (day - env_1.equlibrium_days) % env_1.intrvl_of_days_to_add_treated_mosq << endl;
 				//add_treated_male(env_1.num_of_mosq_to_add);
 				if (env_1.is_non_constant_insertion_scenario == 0) {
-
-
-					// pausing this as each simualtion will have its own number of insertions
-					//if (env_1.fixed_num_DD_insertions > 0) { //checking for manual input/fixed DD insertions and updating the males_add_after_equi to fixed DD_insertions value.
-					//	males_add_after_equi = env_1.fixed_num_DD_insertions;
-
-					//}
-
 					// this is for each simaualtion with its matching insertion number from surveillance data vector
 					env_1.fixed_num_DD_insertions = static_cast<int>(round(specific_simulation_constant_scenario_surveil_val * env_1.andre_scaling_value * env_1.ratio_of_insertion));
 					cout << endl << "\n $$$$$$$_____the day, simulation number, simulation_insertion_value and number of insertions are $$$$$$$_____ \n\n" << day << "------" << sim_cnt << "------" << specific_simulation_constant_scenario_surveil_val << "------" << env_1.fixed_num_DD_insertions << "endl";
@@ -1899,28 +1788,6 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 				}
 			}
 
-
-
-
-			//for (int iyear = start_mon_year.year; iyear <= end_mon_year.year; iyear++) {
-			//	for (int imonth = start_mon_year.month; imonth <= end_mon_year.month; imonth++) {
-			//		cout << "\n" <<iyear<<"\t"<<imonth<<"\t"<< model_year_month_value[iyear][imonth];
-			//		for (int ivec = 0; ivec < emp_data_year_number.size(); ivec++) {
-			//			if (emp_data_year_number[ivec] == iyear && emp_data_month_number[ivec] == imonth) {
-			//				emp_year_month_value[iyear][imonth] = emp_data_monthly_female_main[ivec];
-			//			}
-			//		}
-
-			//	}
-			//}
-
-			//cout << "\nemperical year values from emp_year_month_value";
-			//for (int iyear = start_mon_year.year; iyear <= end_mon_year.year; iyear++) {
-			//	for (int imonth = start_mon_year.month; imonth <= end_mon_year.month; imonth++) {
-			//		cout << "\n" << iyear << "\t" << imonth << "\t" << emp_year_month_value[iyear][imonth];
-			//	}
-			//}
-
 			cout << "\n\n the maximum value in row count vector is: " << max_emp_year_month_row_count_value;
 			cout << "\n\n the emperical values are\n\n";
 
@@ -1952,70 +1819,6 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 					}
 				}
 			}
-
-
-			//monthly female count.
-			//map<int , int> adlt_female_monthly_aggregate;
-
-			//for (const auto& day_itr : adult_female_daily_vect) {
-
-			//	cout << "\n month: "<< getMonthFromDay(day_itr.dayNumber, 2021) <<" \t day: " << day_itr.dayNumber << "\t value : " << day_itr.value;
-
-			//	if(day_itr.dayNumber<env_1.start_mcmc_day){
-			//		continue;
-			//	}
-			//	if (day_itr.dayNumber > env_1.end_mcmc_day) {
-			//		break;
-			//	}
-			//	int month_num = getMonthFromDay(day_itr.dayNumber,2021);
-
-			//	// Aggregate data for the month
-			//	adlt_female_monthly_aggregate[month_num] += day_itr.value;
-			//}
-
-			/*vector<int> model_monthly_agg_female;
-			vector<int> emp_monthly_agg_female;
-			vector<int> emp_year_num_female;
-			vector<int> model_year_num;
-
-			model_monthly_agg_female.clear();
-			emp_monthly_agg_female.clear();
-			emp_year_num_female.clear();
-			model_year_num.clear();
-
-			// checking vectors
-			cout << "\n month\t model_value \t emp_value size is: " << emp_monthly_agg_female.size();
-			for (int icheck = 0; icheck < model_monthly_agg_female.size(); icheck++) {
-				cout << "\n" << icheck + 1 << "\t" << model_monthly_agg_female[icheck] << "\t" << emp_monthly_agg_female[icheck];
-			}
-
-			int month_val_itr = 0;
-			for (auto it = adlt_female_monthly_aggregate.begin(); it != adlt_female_monthly_aggregate.end(); ++it) {
-				month_val_itr = it->first;
-				cout << "\n Month " << it->first << ": " << it->second<<" ***=-=-=-monthly emperical_ value: "<< emp_data_monthly_female_main.at(month_val_itr-1);
-				model_monthly_agg_female.push_back(it->second);
-				emp_monthly_agg_female.push_back(emp_data_monthly_female_main.at(month_val_itr-1));
-
-				cout << "\n the value pushed is : " << emp_data_monthly_female_main.at(month_val_itr-1);
-				//emp_monthly_agg_female.push_back(emp_data_monthly_female_main[it->first-1]); //getting the month value from main vector from main() func and appending it in local vector here //subtracting -1 as the index starts at 0 and it->first starts at 1
-			}
-
-			cout << "\n the real values from vector main()";
-			for (int icheck = 0; icheck < emp_data_monthly_female_main.size(); icheck++) {
-				cout << "\n " << emp_data_monthly_female_main[icheck];
-			}
-			cout << "\n checking both the vectors";
-			if (model_monthly_agg_female.size() != emp_monthly_agg_female.size()) {
-				cout << "\n\n\n************error**********\n\n\n--*_*_*_*_*_*_*_*_*_*_*monthly vectors are not same---------------\n\n\n";
-				return;
-			}
-			cout << "\n month\t model_value \t emp_value size is: "<< emp_monthly_agg_female.size();
-			for (int icheck = 0; icheck < model_monthly_agg_female.size(); icheck++) {
-				cout << "\n" << icheck + 1 << "\t" << model_monthly_agg_female[icheck] << "\t" << emp_monthly_agg_female[icheck];
-			}*/
-
-
-
 
 			monthly_MCMC_female_csv_writer(model_year_month_value);
 			long double loglike_total = 0;
@@ -2079,85 +1882,7 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 					}
 				}
 			}
-			//for (int iyear = start_mon_year.year; iyear <= end_mon_year.year; iyear++) {
-			//	for (int imonth = start_mon_year.month; imonth <= end_mon_year.month; imonth++) {
-			//		cout << "\n" << iyear<<"\t"<<imonth << "\t" << model_year_month_value[iyear][imonth] << "\t\t" << emp_year_month_value[iyear][imonth];
-			//		double prob_succ = env_mcmc.over_disperssion_cand / (env_mcmc.over_disperssion_cand + model_year_month_value[iyear][imonth]); //  n/(n+mu) :: mu= simulation model weekly value
 
-			//		l_k = static_cast<long double>(gsl_ran_negative_binomial_pdf(emp_year_month_value[iyear][imonth], prob_succ, env_mcmc.over_disperssion_cand));
-
-			//		loglike_total += log(l_k);
-
-			//	}
-			//}
-
-
-			//for (int icheck = 0; icheck < model_monthly_agg_female.size(); icheck++) {
-			//	cout << "\n" << icheck << "\t" << model_monthly_agg_female.at(icheck) << "\t\t" << emp_monthly_agg_female.at(icheck);
-			//	//calculating log likely hood
-			//	double prob_succ = env_mcmc.over_disperssion_cand / (env_mcmc.over_disperssion_cand + model_monthly_agg_female.at(icheck)); //  n/(n+mu) :: mu= simulation model weekly value
-			//	l_k = static_cast<long double>(gsl_ran_negative_binomial_pdf(emp_monthly_agg_female.at(icheck), prob_succ, env_mcmc.over_disperssion_cand));
-			//	loglike_total += log(l_k);
-			//}
-
-
-			//weekly data added
-			//calc likelihood
-			//cout << "\n\n the value of female mosq on " << env_1.start_mcmc_day << " is: " << female_count.at(env_1.start_mcmc_day);
-			//cout << "\n\n the value of female mosq on " << env_1.end_mcmc_day << " is: " << female_count.at(env_1.end_mcmc_day);
-
-			//vector<int> model_weekly_calc_female;
-			//int mcmc_curr_day = env_1.start_mcmc_day;
-
-			//cout << " \n before while\n";
-			////checked only once in every week_length days
-			//while (mcmc_curr_day < env_1.end_mcmc_day) {
-			//	int female_sum = 0;
-			//	for (int today_num = 0; today_num < env_1.week_length; today_num++) {
-			//		female_sum = female_sum + female_count.at(mcmc_curr_day);
-			//		mcmc_curr_day++;
-			//	}
-			//	//female_sum = female_sum / env_1.week_length;
-			//	model_weekly_calc_female.push_back(female_sum);
-			//}
-			//cout << "\n after while\n";
-			//for (int icheck = 0; icheck < model_weekly_calc_female.size(); icheck++) {
-			//	cout << "\n " << icheck << "-  -  -  -" << model_weekly_calc_female.at(icheck);
-			//}
-
-			////selecting the required week window from the emperical data
-			//int log_like_start_week = env_1.start_mcmc_day / env_1.week_length;
-			//int log_like_end_week = env_1.end_mcmc_day / env_1.week_length;
-			//vector <int> emp_weekly_female_data_for_comp_vect;
-
-			//for (int icheck = log_like_start_week; icheck < log_like_end_week; icheck++) {
-			//	emp_weekly_female_data_for_comp_vect.push_back(emp_data_weekly_female.at(icheck));
-			//}
-
-			//// checking both vectors length
-			//cout << "\n the nuber of values in emp_weekly female for comp is " << emp_weekly_female_data_for_comp_vect.size();
-			//cout << "\n the number of vals in model weekly_cals vector is " << model_weekly_calc_female.size();
-
-			//if (emp_weekly_female_data_for_comp_vect.size() != model_weekly_calc_female.size()) {
-			//	throw runtime_error("\n both vectors are NOT SAME SIZE");
-			//}
-
-			//weekly_MCMC_female_csv_writer(model_weekly_calc_female);
-			//long double loglike_total = 0;
-			//long double l_k = 0;
-			//cout << "\nweek\tmodel_week_mean\t\temperical_data";
-			//for (int icheck = 0; icheck < model_weekly_calc_female.size(); icheck++) {
-			//	cout << "\n" << icheck << "\t" << model_weekly_calc_female.at(icheck) << "\t\t" << emp_weekly_female_data_for_comp_vect.at(icheck);
-
-			//	//calculating log likely hood
-			//	double prob_succ = env_mcmc.over_disperssion_cand / (env_mcmc.over_disperssion_cand + model_weekly_calc_female.at(icheck)); //  n/(n+mu) :: mu= simulation model weekly value
-
-			//	l_k = static_cast<long double>(gsl_ran_negative_binomial_pdf(emp_weekly_female_data_for_comp_vect.at(icheck), prob_succ, env_mcmc.over_disperssion_cand));
-
-			//	loglike_total += log(l_k);
-
-
-			//}
 			//checking if it is first run of mcmc
 				//assigning to candi_log_like and curr_log_likelihood
 			env_mcmc.cand_like_lihod = loglike_total;
@@ -2473,14 +2198,6 @@ void import_care_cap_and_dates_data(const char* fname, std::vector<string>& vect
 
 
 			date_vector_end.push_back(end_date_value);
-
-
-			//-------------------------
-
-			//print state
-		   /* std::cout << tmp_probab<<"\n--";
-			std::cout << str1 << "\n--";
-			cout << num_reads;*/
 			if (num_reads < 2)
 				throw InputException("Hey, could not read all parameters of a line.\n");
 
@@ -2498,9 +2215,6 @@ void import_care_cap_and_dates_data(const char* fname, std::vector<string>& vect
 		for (const auto& str : unique_CC_vals) {
 			std::cout << str << std::endl;
 		}
-
-
-
 	}  // \try
 
 	catch (InputException& e) {
@@ -2873,14 +2587,6 @@ void import_date_and_temp_data(const char* fname, std::vector<string>& vect_date
 			// Store date in a vector
 			//cout << "\n the date in func string is " << string_date;
 			date_vector.push_back(date_value);
-
-
-			//-------------------------
-
-			//print state
-		   /* std::cout << tmp_probab<<"\n--";
-			std::cout << str1 << "\n--";
-			cout << num_reads;*/
 			if (num_reads < 2)
 				throw InputException("Hey, could not read all parameters of a line.\n");
 
@@ -2905,46 +2611,6 @@ void import_date_and_temp_data(const char* fname, std::vector<string>& vect_date
 
 	fclose(fp);
 }
-
-//void read_CC_vals(std::vector<std::vector<double>>& CC_list_vectors) {
-//	std::ifstream inputFile(env_1.miami_mcmc_file_path);  // Replace "data.csv" with the actual filename
-//
-//	if (!inputFile.is_open()) {
-//		std::cout << "Failed to open the file mcmc." << std::endl;
-//
-//	}
-//
-//	std::string line;
-//	//std::vector<std::vector<double>> columns;
-//	std::vector<int> integerColumn;
-//
-//	while (std::getline(inputFile, line)) {
-//		std::istringstream iss(line);
-//		std::string value;
-//		std::vector<double> column;
-//
-//		while (std::getline(iss, value, ',')) {
-//			double number;
-//			std::istringstream(value) >> number;
-//			column.push_back(number);
-//		}
-//
-//
-//
-//		CC_list_vectors.push_back(column);
-//	}
-//
-//	// Print the values in the columns
-//	//for (const auto& column : CC_list_vectors) {
-//	//    for (const auto& value : column) {
-//	//        std::cout << value << ", ";
-//	//    }
-//	//    std::cout << std::endl;
-//	//}
-//
-//	inputFile.close();
-//
-//}
 
 
 void read_CC_vals_by_map(std::vector<std::string>& column_names_vect, std::map<std::string, std::vector<double>>& CC_map) {
@@ -3004,29 +2670,9 @@ void read_CC_vals_by_map(std::vector<std::string>& column_names_vect, std::map<s
 			temp_col_name = column_names_vect.at(col_iter2);
 			CC_map[temp_col_name].push_back(number);
 			col_iter2++;
-
-		}
-
-
-
-		//CC_list_vectors.push_back(column);
+		}	
 	}
-
-	//temp_col_name = column_names_vect.at(0);
-	//for (auto x : CC_map[temp_col_name]) {
-	//    std::cout << x << '\n';
-	//}
-
-	// Print the values in the columns
-	//for (const auto& column : CC_list_vectors) {
-	//    for (const auto& value : column) {
-	//        std::cout << value << ", ";
-	//    }
-	//    std::cout << std::endl;
-	//}
-
 	inputFile.close();
-
 }
 
 void read_line_check_size(char* buf, int size, FILE* fp) {
@@ -3133,15 +2779,6 @@ void MCMC_csv_writer() {
 		std::cerr << "Error opening file! MCMC_CSV_writer" << std::endl;
 		return;
 	}
-
-	//if (env_mcmc.itr_num == 1) {
-	//	csvFile <<"iter_num" << "," << "CC1_cand" << "," << "cc1_curr" << "," << "cc2_cand" << "," << "cc2_curr" << "," << "cc3_cand" << "," << "cc3_curr" << "," << "cc4_cand" << "," << "cc4_curr" << "," << "egg_cand" << "," << "egg_curr" << "," << "over_disp_cand" << "," << "over_disp_curr" << "," << "cand_liklihood" << "," << "curr_likelihood" << "\n";
-	//}
-
-
-
-	//csvFile <<env_mcmc.itr_num<<","<< env_mcmc.cc1_cand << "," << env_mcmc.cc1_curr << "," << env_mcmc.cc2_cand << "," << env_mcmc.cc2_curr << "," << env_mcmc.cc3_cand << "," << env_mcmc.cc3_curr << "," << env_mcmc.cc4_cand << "," << env_mcmc.cc4_curr << "," << env_mcmc.cc5_cand << "," << env_mcmc.cc5_curr << "," << env_mcmc.eggs_cand << "," << env_mcmc.eggs_curr << "," << env_mcmc.over_disperssion_cand << "," << env_mcmc.over_disperssion_curr << "," << env_mcmc.cand_like_lihod << "," << env_mcmc.curr_like_lihod << "\n";
-
 	csvFile << env_mcmc.itr_num << "," << env_mcmc.cc1_cand << "," << env_mcmc.cc1_curr << "," << env_mcmc.cc2_cand << "," << env_mcmc.cc2_curr << "," << env_mcmc.cc3_cand << "," << env_mcmc.cc3_curr << "," << env_mcmc.cc4_cand << "," << env_mcmc.cc4_curr << "," << env_mcmc.eggs_cand << "," << env_mcmc.eggs_curr << "," << env_mcmc.over_disperssion_cand << "," << env_mcmc.over_disperssion_curr << "," << env_mcmc.cand_like_lihod << "," << env_mcmc.curr_like_lihod << "\n";
 
 	csvFile.close();
@@ -3258,9 +2895,6 @@ void monthly_MCMC_female_csv_writer(map<int, map<int, int>>& model_year_month_va
 
 
 	cout << "\n inside writer monthly: ";
-	/*for (int icheck = 0; icheck < model_year_month_value.size(); icheck++) {
-		cout << "\n " << model_monthly_calc_female[icheck];
-	}*/
 	month_year start_mon_year = getDateFromDayNumber(env_1.start_mcmc_day);
 	month_year end_mon_year = getDateFromDayNumber(env_1.end_mcmc_day);
 
@@ -3313,15 +2947,6 @@ void monthly_MCMC_female_csv_writer(map<int, map<int, int>>& model_year_month_va
 			}
 		}
 		csvFile << "\n";
-
-		/*int month_num = getMonthFromDay(env_1.start_mcmc_day, 2021);
-		for (int icheck = 0; icheck < model_monthly_calc_female.size(); icheck++) {
-			csvFile << month_num++;
-			if (icheck != model_monthly_calc_female.size() - 1) {
-				csvFile << ",";
-			}
-		}
-		csvFile << "\n";*/
 	}
 
 
@@ -3370,24 +2995,9 @@ void monthly_MCMC_female_csv_writer(map<int, map<int, int>>& model_year_month_va
 		}
 	}
 
-	//for (int iyear = start_mon_year.year; iyear <= end_mon_year.year; iyear++) {
-	//	for (int imonth = start_mon_year.month; imonth <= end_mon_year.month; imonth++) {
-	//		csvFile << model_year_month_value[iyear][imonth];
-	//		if (iyear != end_mon_year.year && imonth != end_mon_year.month) {
-	//			csvFile << ",";
-	//		}
-	//	}
-	//}
+
 	csvFile << "\n";
 
-	/*for (int icheck = 0; icheck < model_monthly_calc_female.size(); icheck++) {
-		csvFile << model_monthly_calc_female.at(icheck);
-		if (icheck != model_monthly_calc_female.size() - 1) {
-			csvFile << ",";
-		}
-
-	}
-	csvFile << "\n";*/
 
 	csvFile.close();
 
