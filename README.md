@@ -51,3 +51,23 @@ cmake --build . --config Release
 ```bash
 python ./scripts/clean_test_run.py
 ```
+
+### sample input parameters
+For example, a scenario starting the model in year 2019 and its release of modified mosquitoes under constant release(0) design in year 2021 for duration of 180 days(6 months) with a frequency of every 7 days with collection factor of 0.246 for release ratios of [1.0,2.0,4.0]
+would be as below.
+
+```bash
+intervention_start_year = 2021  # year to start the release of modified mosquito
+baseline_year           = 2019  # the simulation's calendar epoch (the year corresponding to day 0)
+num_sims                = 100   # number of stochastic simulations to run per parameter combination
+is_non_constant_scenario = 0    # 0 for constant, 1 for non-constant(adaptive) insertions scenario
+scale_factor            = 0.246  # collection factor to convert from number of mosquitoes to trap counts in the surveillance data
+random_seed             = 42    # random seed for reproducibility
+
+output_sub_folder = (
+    f"test_2026_script_test_1/constant_insertion_scenario/"
+    f"trails_starting_2021/all_months_1_2_4_ratios"
+
+    intervention_durations  = [180]                     # duration of the intervention in days (e.g., 180 days = 6 months)
+insertion_frequencies   = [7]                       # number of days between insertions (e.g., 7 = weekly)
+```
