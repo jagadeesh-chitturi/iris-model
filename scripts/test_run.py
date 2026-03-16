@@ -27,7 +27,7 @@ def run_cpp_with_args(args):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     
     # Move up one level to the project root and then into the build folder
-    # This creates: D:\CEPH_LAB\gmm-model-project\build\Debug\mosquito_sim.exe
+    # This creates: sys_dir\gmm-model-project\build\Release\mosquito_sim.exe
     cpp_executable = os.path.join(script_dir, "..", "build", "Release", "mosquito_sim.exe")
     
     # Normalize the path for Windows (turns / into \)

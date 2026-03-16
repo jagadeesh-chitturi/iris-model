@@ -885,79 +885,79 @@ void create_initial_mosquitoes(int initial_larve_agents_frm_ratio, int initial_p
 }
 
 //function to kill larve by larve-ciding
-void kill_by_larve_ciding(gsl_rng* _RNG_P) {
+// void kill_by_larve_ciding(gsl_rng* _RNG_P) {
 
-	float status_death_prob;
-	int l_die_vect_cntr = -1;
+// 	float status_death_prob;
+// 	int l_die_vect_cntr = -1;
 
-	temp = head;
-	curr_mosq = head;
-	prev_mosq = head;
-	int larve_pop = 0;
-	/*cout << "\n the larve are: ";
-	for (int i = 0; i < larve_vector.size(); i++) {
-		std::cout << larve_vector[i]->mosq_id << " ,";
-	}*/
-	while (temp != NULL) {
+// 	temp = head;
+// 	curr_mosq = head;
+// 	prev_mosq = head;
+// 	int larve_pop = 0;
+// 	/*cout << "\n the larve are: ";
+// 	for (int i = 0; i < larve_vector.size(); i++) {
+// 		std::cout << larve_vector[i]->mosq_id << " ,";
+// 	}*/
+// 	while (temp != NULL) {
 
-		larve_pop = larve_vector.size();
-		if (larve_pop < 2) {
-			cout << "There are leass than 2 larve in the list";
-			return;
-		}
+// 		larve_pop = larve_vector.size();
+// 		if (larve_pop < 2) {
+// 			cout << "There are leass than 2 larve in the list";
+// 			return;
+// 		}
 
 
-		if (curr_mosq->status == 1) {
-			//cout << "\n\nin larve ciding larve count now is:" << larve_vector.size();
-			//cout << "\n the current larve is: " << curr_mosq->mosq_id;
-			switch (curr_mosq->status) {
-			case 1:
-				l_die_vect_cntr++;
-				status_death_prob = env_1.proportion_larve_to_kill * 0.01; //* env_1.step_size; multiplying by 0.01 to convert to percentage
-				break;
-			}
+// 		if (curr_mosq->status == 1) {
+// 			//cout << "\n\nin larve ciding larve count now is:" << larve_vector.size();
+// 			//cout << "\n the current larve is: " << curr_mosq->mosq_id;
+// 			switch (curr_mosq->status) {
+// 			case 1:
+// 				l_die_vect_cntr++;
+// 				status_death_prob = env_1.proportion_larve_to_kill * 0.01; //* env_1.step_size; multiplying by 0.01 to convert to percentage
+// 				break;
+// 			}
 
-			env_1.death_oc = gsl_ran_bernoulli(_RNG_P, status_death_prob);
-			//erasing larve from vector if they die
-			if (env_1.death_oc == 1) {
-				//cout << "\n\nkilling mosq:" << curr_mosq->mosq_id;
-				env_1.death_count++;
-				switch (curr_mosq->status) {
-				case 1:
-					larve_vector.erase(larve_vector.begin() + l_die_vect_cntr);
-					l_die_vect_cntr--;
-					//cout << "\nin second switch";
-				}
+// 			env_1.death_oc = gsl_ran_bernoulli(_RNG_P, status_death_prob);
+// 			//erasing larve from vector if they die
+// 			if (env_1.death_oc == 1) {
+// 				//cout << "\n\nkilling mosq:" << curr_mosq->mosq_id;
+// 				env_1.death_count++;
+// 				switch (curr_mosq->status) {
+// 				case 1:
+// 					larve_vector.erase(larve_vector.begin() + l_die_vect_cntr);
+// 					l_die_vect_cntr--;
+// 					//cout << "\nin second switch";
+// 				}
 
-				if (curr_mosq == head) {
-					head = head->next;
-					delete curr_mosq;
-					curr_mosq = head;
-					prev_mosq = head;
-				}
-				else {
-					prev_mosq->next = curr_mosq->next;
-					delete curr_mosq;
-					curr_mosq = prev_mosq->next;
+// 				if (curr_mosq == head) {
+// 					head = head->next;
+// 					delete curr_mosq;
+// 					curr_mosq = head;
+// 					prev_mosq = head;
+// 				}
+// 				else {
+// 					prev_mosq->next = curr_mosq->next;
+// 					delete curr_mosq;
+// 					curr_mosq = prev_mosq->next;
 
-				}
-			}
-			else {
+// 				}
+// 			}
+// 			else {
 
-				prev_mosq = curr_mosq;
-				curr_mosq = curr_mosq->next;
-			}
-		}
-		else {
+// 				prev_mosq = curr_mosq;
+// 				curr_mosq = curr_mosq->next;
+// 			}
+// 		}
+// 		else {
 
-			prev_mosq = curr_mosq;
-			curr_mosq = curr_mosq->next;
-		}
+// 			prev_mosq = curr_mosq;
+// 			curr_mosq = curr_mosq->next;
+// 		}
 
-		temp = curr_mosq->next; //to check if curr's next is null to execute seperate case for last mosq in list
-	}//while lo
+// 		temp = curr_mosq->next; //to check if curr's next is null to execute seperate case for last mosq in list
+// 	}//while lo
 
-}
+// }
 
 
 int alloc_and_setup_gsl_random_generator() {
@@ -1612,20 +1612,20 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 			}
 
 
-			// killing larve by larve-ciding method
-			cout << "\n the number before killing larve: " << larve_vector.size();
-			if (larve_vector.size() < 2) {
-				cout << "There are leass than 2 larve in the list";
-			}
-			else {
-				if (day >= env_1.larve_insertion_start_day && day < env_1.larve_insertion_end_day && day % env_1.freq_days_of_larve_ciding == 0) {
-					cout << "\n\n\n\nThe larve count before killing: " << larve_vector.size();
-					kill_by_larve_ciding(_RNG_P);
-					cout << "\nThe larve count after killing: " << larve_vector.size();
-				}
-			}
-			cout << "\n the number after killing larve: " << larve_vector.size();
-			cout << "\n male vector size : " << male_vector.size();
+			// // killing larve by larve-ciding method
+			// cout << "\n the number before killing larve: " << larve_vector.size();
+			// if (larve_vector.size() < 2) {
+			// 	cout << "There are leass than 2 larve in the list";
+			// }
+			// else {
+			// 	if (day >= env_1.larve_insertion_start_day && day < env_1.larve_insertion_end_day && day % env_1.freq_days_of_larve_ciding == 0) {
+			// 		cout << "\n\n\n\nThe larve count before killing: " << larve_vector.size();
+			// 		kill_by_larve_ciding(_RNG_P);
+			// 		cout << "\nThe larve count after killing: " << larve_vector.size();
+			// 	}
+			// }
+			// cout << "\n the number after killing larve: " << larve_vector.size();
+			// cout << "\n male vector size : " << male_vector.size();
 
 			male_count.push_back(male_vector.size());
 			female_count.push_back(female_vector.size());

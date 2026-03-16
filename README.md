@@ -27,7 +27,7 @@ git clone https://github.com/jagadeesh-chitturi/gmm-model-project.git
 
 Once you have downloaded all the required source code, header files and input files, you need to configure the required input parameters
 for the model present in /data/constant_release_trial_in/model_input_config.csv (template). once the template is configured for all required parameters
-you can compile source code using 'CMakeLists.txt' as below, given you have installed required vcpkg, CMAKE tools
+you can compile source code and build executable using 'CMakeLists.txt' as below, given you have installed required vcpkg, CMAKE tools
 
 ```bash
 cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="D:/vcpkg/scripts/buildsystems/vcpkg.cmake"
@@ -44,3 +44,10 @@ cmake --build . --config Release
  ```bash
  ./build/Debug/mosquito_sim.exe data/inputs/model_in/constant_release_trial_in/model_input_config.csv
  ```
+
+ alternately from root folder you can run the provided python script to create a input file by changing required parameters in code which also uses template and runs the model executable file.
+
+
+```bash
+python ./scripts/clean_test_run.py
+```
