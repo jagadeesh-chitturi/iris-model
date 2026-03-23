@@ -1,4 +1,4 @@
-# MOTS, a tool for the in-silico evaluation of mosquito control trial designs based on inundative releases
+# IRIS (Inundative mosquito Release Intervention Simulator), a tool for the in-silico evaluation of mosquito control trial designs based on inundative releases
 
 # Configuration guide
 

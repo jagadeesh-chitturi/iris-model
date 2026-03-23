@@ -27,3 +27,10 @@ Thumbs.db
 
 # This folder and files can be deleted
 scratch_tests_folder/
+
+# Jupyter Notebook checkpoints and outputs
+*.ipynb_checkpoints/
+*.ipynb
+
+# Old files to links to new files
+old files.md
