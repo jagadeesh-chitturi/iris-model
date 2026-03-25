@@ -20,9 +20,12 @@ import os
 import subprocess
 from pathlib import Path
 
+from logistro import parser
 import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
+import argparse
+from datetime import datetime, time
 
 # ---------------------------------------------------------------------------
 # Logging
@@ -55,6 +58,8 @@ ROW = {
     "random_seed":                 67,
     "output_folder":               27,
     "mcmc_output_placeholder":     55,
+    "imperical_data_and_surveillance_file": 58,
+    "mcmc_monthly_output_folder":   59,
 }
 
 # ---------------------------------------------------------------------------
@@ -154,9 +159,12 @@ def build_config_dataframe(
     carrying_capacity_dates_file: Path,
     mcmc_file: Path,
     surveillance_file: Path,
+    adaptive_surveillance_file: Path,
     is_non_constant_scenario: int,
     scale_factor: float,
     random_seed: int,
+    imperical_data_and_surveillance_file: Path,
+    mcmc_monthly_output_folder: Path,
 ) -> pd.DataFrame:
     """
     Return a copy of *template_df* with the relevant cells overwritten for
@@ -178,7 +186,7 @@ def build_config_dataframe(
     df.iloc[ROW["mcmc_file"], 1]                 = str(mcmc_file)
 
     df.iloc[ROW["is_non_constant_scenario"], 1]  = is_non_constant_scenario
-    df.iloc[ROW["non_constant_file"], 1]         = "not_required"
+    df.iloc[ROW["non_constant_file"], 1]         = str(adaptive_surveillance_file)
     df.iloc[ROW["insertion_ratio"], 1]           = insertion_ratio
     df.iloc[ROW["scale_factor"], 1]              = scale_factor
     df.iloc[ROW["surveillance_file"], 1]         = str(surveillance_file)
@@ -186,6 +194,8 @@ def build_config_dataframe(
 
     df.iloc[ROW["output_folder"], 1]             = str(output_folder) + "/"
     df.iloc[ROW["mcmc_output_placeholder"], 1]   = "/"
+    df.iloc[ROW["imperical_data_and_surveillance_file"], 1] = str(imperical_data_and_surveillance_file)
+    df.iloc[ROW["mcmc_monthly_output_folder"], 1] = str(mcmc_monthly_output_folder) + "/"
 
     return df
 
@@ -196,6 +206,13 @@ def build_config_dataframe(
 
 def main() -> None:
     """Entry point: configure and launch the full simulation sweep."""
+
+    #Get current time
+    now = datetime.now()
+
+    # Format: Year-Month-Day Hour:Minute:Second
+    current_timestamp = now.strftime("%Y-%m-%d_%H%M%S")
+
 
     # ------------------------------------------------------------------
     # Environment
@@ -214,45 +231,51 @@ def main() -> None:
     output_dir   = Path(output_dir)
 
     # ------------------------------------------------------------------
-    # Paths
+    # Argparse
     # ------------------------------------------------------------------
-    inputs_folder = (
-        project_root / "data" / "inputs" / "model_in" / "constant_release_trial_in"
+    parser = argparse.ArgumentParser(description="Run simulation sweep.")
+
+    parser.add_argument(
+        "-a", "--is_adaptive_scenario",
+        action="store_true",
+        help="True for adaptive insertion scenario(default: False for constant scenario)."
+    )
+    parser.add_argument(
+        "-o", "--output-folder",
+        type=str,
+        default=f"model-outputs-{current_timestamp}",
+        help="Folder to save simulation outputs."
     )
 
-    temperature_file            = inputs_folder / "miami_2019_2023_temperature_celsius.csv"
-    carrying_capacity_dates_file = inputs_folder / "Miami_carrying_capacity_dates.csv"
-    mcmc_file                   = inputs_folder / "random_mcmc_carrying_capacity_100_vals.csv"
-    surveillance_base_path      = (
-        inputs_folder
-        / "supporting_files"
-        / "each_month_60_day_surveillance_100_sims_vals"
-    )
+    args = parser.parse_args()
 
-    # Locate the compiled executable relative to this script file.
-    script_dir  = Path(__file__).resolve().parent
-    executable  = (script_dir / ".." / "build" / "Release" / "mosquito_sim.exe").resolve()
 
     # ------------------------------------------------------------------
     # Experiment parameters
     # ------------------------------------------------------------------
-    intervention_start_year = 2021  # year to start the release of modified mosquito
+    intervention_start_year = 2022  # year to start the release of modified mosquito
     baseline_year           = 2019  # the simulation's calendar epoch (the year corresponding to day 0)
     num_sims                = 100   # number of stochastic simulations to run per parameter combination
     is_non_constant_scenario = 0    # 0 for constant, 1 for non-constant(adaptive) insertions scenario
     scale_factor            = 0.246  # collection factor to convert from number of mosquitoes to trap counts in the surveillance data
     random_seed             = 42    # random seed for reproducibility
 
+    if args.is_adaptive_scenario:
+        is_non_constant_scenario = 1
+    else:
+        is_non_constant_scenario = 0
+    
     if is_non_constant_scenario:
         scenario_type_out_folder    = "adaptive_insertion_scenario"
     else:
         scenario_type_out_folder    = "constant_insertion_scenario"
 
     output_sub_folder = (
-        f"test_2026_script_test_1/{scenario_type_out_folder}/"
-        f"trails_starting_{intervention_start_year}/all_months_1_2_4_ratios"
+        f"{args.output_folder}/{scenario_type_out_folder}/"
+        f"trails_starting_{intervention_start_year}"
     )
     sim_output_path = output_dir / output_sub_folder
+    mcmc_output_path = sim_output_path / "mcmc_outputs" / "model_monthly_mcmc_female.csv"
 
     if sim_output_path.exists():
         raise FileExistsError(
@@ -272,6 +295,46 @@ def main() -> None:
         "Days before intervention start year %d (from %d): %d",
         intervention_start_year, baseline_year, days_offset,
     )
+
+    # ------------------------------------------------------------------
+    # Paths
+    # ------------------------------------------------------------------
+
+    if is_non_constant_scenario:
+        logger.info("Running non-constant (adaptive) insertion scenario.")
+        inputs_folder = (
+            project_root / "data" / "inputs" / "model_in" / "adaptive_release_trial_in"
+        )
+        adaptive_surveillance_base_path = (
+            inputs_folder
+            / "surveil_data_7_days_for_non_constant.csv"
+        )
+        surveillance_base_path = './not_required'
+    else:
+        logger.info("Running constant insertion scenario.")
+        inputs_folder = (
+            project_root / "data" / "inputs" / "model_in" / "constant_release_trial_in"
+        )
+        surveillance_base_path      = (
+            inputs_folder
+            / "supporting_files"
+            / "each_month_60_day_surveillance_100_sims_vals"
+        )
+        adaptive_surveillance_base_path = 'not_required'
+
+    temperature_file            = inputs_folder / "miami_2019_2023_temperature_celsius.csv"
+    carrying_capacity_dates_file = inputs_folder / "Miami_carrying_capacity_dates.csv"
+    mcmc_file                   = inputs_folder / "random_mcmc_carrying_capacity_100_vals.csv"
+
+    imperical_data_and_surveillance_file    = (
+        project_root /"data" / "inputs" / "model_in" / "miami_monthly_aggregates_and_trap_count.csv"
+        )
+
+
+    # Locate the compiled executable relative to this script file.
+    script_dir  = Path(__file__).resolve().parent
+    executable  = (script_dir / ".." / "build" / "Release" / "mosquito_sim.exe").resolve()
+
 
     # ------------------------------------------------------------------
     # Load config template
@@ -297,10 +360,13 @@ def main() -> None:
             for duration in intervention_durations:
                 for freq in insertion_frequencies:
 
-                    month_name       = MONTH_NAMES[MONTH_START_DAYS.index(eq_day)]
-                    surveillance_file = (
-                        surveillance_base_path / f"{month_name}_surveillance.csv"
-                    )
+                    if is_non_constant_scenario:
+                        surveillance_file ='not_required'
+                    else:
+                        month_name       = MONTH_NAMES[MONTH_START_DAYS.index(eq_day)]
+                        surveillance_file = (
+                            surveillance_base_path / f"{month_name}_surveillance.csv"
+                        )
 
                     run_label   = f"{ratio}_{eq_day}_{freq}_{duration}"
                     run_folder  = sim_output_path / run_label
@@ -319,9 +385,12 @@ def main() -> None:
                         carrying_capacity_dates_file = carrying_capacity_dates_file,
                         mcmc_file                = mcmc_file,
                         surveillance_file        = surveillance_file,
+                        adaptive_surveillance_file = adaptive_surveillance_base_path,
                         is_non_constant_scenario = is_non_constant_scenario,
                         scale_factor             = scale_factor,
                         random_seed              = random_seed,
+                        imperical_data_and_surveillance_file = imperical_data_and_surveillance_file,
+                        mcmc_monthly_output_folder     = mcmc_output_path,
                     )
 
                     config_csv = run_folder / f"variables_{run_label}.csv"

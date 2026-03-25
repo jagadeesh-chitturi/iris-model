@@ -1,0 +1,69 @@
+﻿initial_mosqitoes(not used),200
+max_larve_cap,1000000
+mate_prob,0.12669
+treated_prob,0
+female_death_prob,0.136517
+male_death_prob,0.136517
+egg_death_prob,0.324371
+larve_death_prob,0.076482
+pupe_death_prob,0.103366
+gender_prob_for offsprings,0.5
+find_male_prob,1
+egg_next_stg_prob,0.330218
+larve_next_stage_prob,0.122191
+pupe_next_stage_prob,0.356933
+intrvl_of_days_to_add_treated_mosq ,7
+ratio_DD,0
+num_of_days_to_expmnt,1826
+num_of_times_in_each_day,10
+equlibrium_days(insertion start day),0
+max_egg_cap,5000
+linear_egg_cap,5000
+output_filename,simulation_
+num_of_simulations_to_run,1
+sim_initial_egg_ratio,1
+sim_initial_larve_ratio,1.637281292
+sim_initial_pupe_ratio,0.438873934
+sim_initial_adult_ratio,0.601166442
+output_filepath,will be added in python
+duration_intervention,180
+fixed_num_DD_insertions,0
+larve_insertion_start_day,120
+larve_insertion_end_day,700
+proportion_larve_to_kill,0
+freq_of_larve_ciding,7
+miami_temperature_file_path,added in python
+miami_carrying_capacity_dates_file_path,added in python
+miami_mcmc_file_path,added in python
+is_mcmc_simulation,0
+week_len_mcmc,7
+start_mcmc_day(2021 starts on Friday so 7times +2 and -1 as day starts from 0),59
+end_mcmc_day,1730
+emperical_data_file_path,D:/CEPH_LAB/CPP_CEPH_lab/Mosquito_Stage_2/Mosquito_Stage_2/2021_opts/monthly_aggregates/Miami_weekly_female_aegypti.csv
+CC_1,289.840739
+CC_2,289.840739
+CC_3,489.61136
+CC_4,289.840739
+CC_eggs,1000
+std_dev_CC_1,55
+std_dev_CC_2,17
+std_dev_CC_3,19
+std_dev_CC_4,14
+std_dev_CC_eggs,0
+std_dev_over_disp,1.4
+over_disperssion,1.4
+num_mcmc_iters,50000
+mcmc_outputfile_path,D:/CEPH_LAB/CPP_CEPH_lab/Mosquito_Stage_2/Mosquito_Stage_2/2021_opts/19_to_23_but_starting_20_23/mcmc_output_data_monthly_50k_exp2_holder.csv
+max_mcmc_cand_reject_cap,20
+weekly_mcmc_female,D:/CEPH_LAB/CPP_CEPH_lab/Mosquito_Stage_2/Mosquito_Stage_2/2021_opts/19_to_23_but_starting_20_23/model_weekly_mcmc_female_exp_2_holder.csv
+monthly_emperical_file_path,D:/CEPH_LAB/CPP_CEPH_lab/Mosquito_Stage_2/Mosquito_Stage_2/2021_opts/experiments_for_paper_monthly_agg/5_year_with_mcmc_vals/2019_2023_emperical_mosq_agg_and_row_count.csv
+monthly_model_female_file_path_output,D:/CEPH_LAB/CPP_CEPH_lab/Mosquito_Stage_2/Mosquito_Stage_2/2021_opts/19_to_23_but_starting_20_23/model_monthly_mcmc_female_50k_exp2_holder.csv
+model_start_year,2019
+max_emp_year_month_row_count_value_all_years(get value from python manually). Make this cell zeor other wise,0
+is_non_constant_insertion_scenario,0
+surveillance_data_matrix_file_path,not_required_for_constant
+ratio_of_insertion,0
+andre_scaling_value,0.246
+constant_scenario_specific_month_100_sims_surveil_data_csv_filepath,not_required
+seed_from_external_input,42
+treated_male_fitness,1
