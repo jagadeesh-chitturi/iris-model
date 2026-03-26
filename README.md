@@ -20,7 +20,7 @@ Additionally, to reproduce all results from the papers, you may need:
 Clone this repository and its submodules using git:
 
 ```bash
-git clone https://github.com/jagadeesh-chitturi/gmm-model-project.git
+git clone https://github.com/jagadeesh-chitturi/iris-model.git
 ```
 
 ## Compiling the GMM model source code
