@@ -106,6 +106,10 @@ int main(int argc, char* argv[]) {	// 	main function to run the model and takes 
 
 	//reading files.
 	cout << "\n variables read..";
+	if (argc < 2) {
+		cout << "\n please provide the path to the variables csv file as an argument when running the program";
+		return 1;
+	}
 	read_variables(argv[1],env_1); //to read input variables from csv file through arguments
 
 	cout << "\n reading of variables completed";
