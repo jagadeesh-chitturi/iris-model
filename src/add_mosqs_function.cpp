@@ -2958,7 +2958,7 @@ void monthly_MCMC_female_csv_writer(map<int, map<int, int>>& model_year_month_va
 	}
 
 
-	if (start_mon_year.year = end_mon_year.year) {
+	if (start_mon_year.year == end_mon_year.year) {
 		for (int imonth = start_mon_year.month; imonth <= end_mon_year.month; imonth++) {
 			//for (int imonth = 1; imonth <= 12; imonth++) {
 			csvFile << model_year_month_value[start_mon_year.year][imonth];

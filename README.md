@@ -32,8 +32,12 @@ git clone https://github.com/jagadeesh-chitturi/gmm-model-project.git
 
 you can compile source code and build executable using 'CMakeLists.txt' as below, given you have installed required vcpkg, CMAKE tools
 
-Run the below code cell replacing the path to your vcpkg path, to setup for building the executable file
+move to build folder
+```bash
+cd build
+```
 
+Run the below code cell replacing the path to your vcpkg path, to setup for building the executable file
 ```bash
 cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="/vcpkg/scripts/buildsystems/vcpkg.cmake"
 ```

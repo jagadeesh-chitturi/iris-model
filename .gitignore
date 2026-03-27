@@ -13,7 +13,7 @@ venv/
 env/
 
 # Model outputs (Keep the directory structure, ignore the contents)
-output/*
+output/
 !output/.gitkeep
 out/
 
@@ -35,3 +35,19 @@ data/tests_in
 
 # Old files to links to new files
 old files.md
+
+*.vcxproj
+*.vcxproj.filters
+*.cmake*
+CMakeCache.txt
+CmakeFiles/
+GMM_model.sln
+vcpkg-manifest-install.log
+vcpkg.json
+vcpkg_installed
+data1.csv
+Release/
+tests_in/
+mosquito_sim.dir/
+x64/
+.env
