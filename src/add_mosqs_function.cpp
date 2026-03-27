@@ -1910,9 +1910,23 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 		std::vector<std::pair<std::string, std::vector<double>>> ratios = { { "Larve_ratio",larve_ratio }, { "Pupe_ratio",pupe_ratio}, { "Male_ratio",male_ratio}, { "Female_ratio",female_ratio} };
 		cout << "\n number of adults on equibrilium day: " << env_1.adult_males_on_equibrilium << "\n added with percent " << males_add_after_equi;
 
+		// 1. Define the directory path
+		fs::path dir_path = env_1.output_filepath;
+
+		// 2. Check if it exists, if not, create it
+		if (!fs::exists(dir_path)) {
+			fs::create_directories(dir_path);
+		}
+
+		// 3. Now proceed with your filename logic
 		temp_file_names = env_1.output_filepath + file_names_list + to_string(sim_cnt) + ".csv";
-		cout << temp_file_names;
+		cout << "Writing to: " << temp_file_names << endl;
+
 		write_csv(temp_file_names, vals3);
+
+		// temp_file_names = env_1.output_filepath + file_names_list + to_string(sim_cnt) + ".csv";
+		// cout << temp_file_names;
+		// write_csv(temp_file_names, vals3);
 		//--checking--file_counter++;
 
 		cout << "\n files in write";
