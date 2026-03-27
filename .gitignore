@@ -39,8 +39,6 @@ old files.md
 *.vcxproj
 *.vcxproj.filters
 *.cmake*
-CMakeCache.txt
-CmakeFiles/
 GMM_model.sln
 vcpkg-manifest-install.log
 vcpkg.json
@@ -50,4 +48,12 @@ Release/
 tests_in/
 mosquito_sim.dir/
 x64/
-.env
+
+# CMake build files and directories (using Unix and Make)
+CMakeFiles
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+
+# Unix C++ executable
+mosquito_sim

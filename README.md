@@ -15,50 +15,61 @@ Additionally, to reproduce all results from the papers, you may need:
 - python (version **need to be checked** was used in the development)
 - Required python libraries (see **need to be checked** [requirements.in](/requirements.in))
 
+For easily building (compiling) the C++ code, you may want to also have [CMake](https://cmake.org/) installed. 
+
 ## Downloading the necessary files
 
 Clone this repository and its submodules using git:
 
 ```bash
-git clone https://github.com/jagadeesh-chitturi/gmm-model-project.git
+git clone https://github.com/jagadeesh-chitturi/iris-model.git
 ```
 
 ## Compiling the GMM model source code
 
-**Once you have downloaded all the required source code, header files and input files. You can follow any of below two methods to run the IRIS model, although we recommend using 2nd method as it requires least effort of adjusting input variables like paths and other parameters.**
+**Once you have downloaded all the required source code, header files and input files, you can follow any of below two methods to run the IRIS model, although we recommend 2nd method as it requires least effort in adjusting input variables like paths and other parameters.**
 
-### common steps for both the execution methods to build the executable file
+### Common steps for both the execution methods to build the executable file
 
 
-you can compile source code and build executable using 'CMakeLists.txt' as below, given you have installed required vcpkg, CMAKE tools
+You can compile source code and build executable using CMake and the 'CMakeLists.txt' file.
 
-move to build folder
-```bash
-cd build
-```
+#### On Windows
 
-Run the below code cell replacing the path to your vcpkg path, to setup for building the executable file
-```bash
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="/vcpkg/scripts/buildsystems/vcpkg.cmake"
-```
-
-to build an executable file in release mode for the model
+On a Windows system, run the code below from the root of the repository, replacing the path to your vcpkg path, to setup and building the executable file:
 
 ```bash
+cmake . -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="/vcpkg/scripts/buildsystems/vcpkg.cmake"
 cmake --build . --config Release
 ```
 
-### Method 1(manual tweaking of input parameters to run the model)
+The executable should be created at `./build/Release/mosquito_sim.exe`
 
-you need to configure the required input parameters
-for the model present in /data/constant_release_trial_in/model_input_config.csv (template). once the template is configured for all required parameters pass the input parameters file path as below to the executale file
+#### On Linux/MacOS
+
+In a Unix environment, run the following commands from the root of the repository:
+
+```bash
+cmake . -DCMAKE_BUILD_TYPE=Release
+cmake --build . --config Release 
+```
+
+The executable should be created directly on the repository root as `mosquito_sim`.
+
+
+### Method 1 (manual tweaking of input parameters to run the model)
+
+You need to configure the required input parameters
+for the model present in /data/constant_release_trial_in/model_input_config.csv (template). once the template is configured for all required parameters pass the input parameters file path as below to the executable file:
 
  ```bash
  ./build/Release/mosquito_sim.exe data/inputs/model_in/constant_release_trial_in/model_input_config.csv
  ```
 
-### Method 2(recommended approach)
- alternately from root folder you can run the provided python script which uses the template file and generates the input file for each scenario and run the c++ executable file(model)
+ Replace `./build/Release/mosquito_sim.exe` with the proper executable file path if necessary.
+
+### Method 2 (recommended approach)
+Alternately from root folder you can run the provided python script which uses the template file and generates the input file for each scenario and run the c++ executable file(model)
  for all possible combinations coded in the py script.
 
 This python take two arguments as inputs
