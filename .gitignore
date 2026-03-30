@@ -14,6 +14,7 @@ env/
 
 # Model outputs (Keep the directory structure, ignore the contents)
 output/
+outputs
 !output/.gitkeep
 out/
 
