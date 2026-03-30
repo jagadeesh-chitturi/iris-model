@@ -19,6 +19,7 @@ import logging
 import os
 import subprocess
 from pathlib import Path
+import sys
 
 from logistro import parser
 import numpy as np
@@ -333,7 +334,13 @@ def main() -> None:
 
     # Locate the compiled executable relative to this script file.
     script_dir  = Path(__file__).resolve().parent
-    executable  = (script_dir / ".." / "build" / "Release" / "mosquito_sim.exe").resolve()
+    # Determine executable name and location based on OS
+    if sys.platform == "win32":
+        executable = (script_dir / ".." / "build" / "Release" / "mosquito_sim.exe").resolve()
+    else:
+        # Unix/Linux/macOS: executable in parent directory, no extension
+        executable = (script_dir / ".." / "mosquito_sim").resolve()
+    # executable  = (script_dir / ".." / "build" / "Release" / "mosquito_sim.exe").resolve()
 
 
     # ------------------------------------------------------------------
