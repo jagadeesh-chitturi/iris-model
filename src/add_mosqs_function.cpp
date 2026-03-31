@@ -2078,9 +2078,14 @@ void main_function_logic(std::vector<string>& vect_CC_list, std::vector<string>&
 
 int get_num_lines_csv(std::string file_name) {
 	std::ifstream inputFile(file_name);  // Replace "data.csv" with the actual filename
-
-	if (!inputFile.is_open()) {
-		std::cout << "Failed to open the file line count." << std::endl;
+	try {
+		if (!inputFile.is_open()) {
+			throw std::runtime_error("Failed to open the file.");
+		}
+	}
+	catch (const std::runtime_error& e) {
+		std::cerr << "Error: file name:" << file_name << " - " << e.what() << std::endl;
+		return -1;
 	}
 
 	std::string line;

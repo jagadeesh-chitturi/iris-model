@@ -25,7 +25,7 @@ sim_initial_egg_ratio,1
 sim_initial_larve_ratio,1.637281292
 sim_initial_pupe_ratio,0.438873934
 sim_initial_adult_ratio,0.601166442
-output_filepath,output/tester_file_output/constant_insertion_scenario/trails_starting_2022/2.0_0_7_180/
+output_filepath,output/tester_file_output_30/constant_insertion_scenario/trails_starting_2022/2.0_0_7_180/
 duration_intervention,180
 fixed_num_DD_insertions,0
 larve_insertion_start_day,120

@@ -34,6 +34,14 @@ git clone https://github.com/jagadeesh-chitturi/iris-model.git
 
 You can compile source code and build executable using CMake and the 'CMakeLists.txt' file.
 
+### .env file setup
+Please set up your .env file for following parametrs
+```bash
+# .env sample file
+PROJECT_ROOT=root/project_name # please adjust this as per you root path to the project folder
+OUTPUT_DIR=root/project_name/output # path to store the outputs 
+```
+
 #### On Windows
 
 On a Windows system, run the code below from the root of the repository, replacing the path to your vcpkg path, to setup and building the executable file:
@@ -86,6 +94,23 @@ You can run adaptive scenario as below
 python ./scripts/clean_test_run.py -a -o output_folder_name
 ```
 
+So for example, the final output path where the simulations will be stored based on .env variable OUTPUT_DIR ('root/project_name/output') and arguments from python commandline ('output_folder_name') is:
+```bash
+root/project_name/output/output_folder_name/'{constant/adaptive _insertion_scenario}'/'{trails_starting_year}'/'scenario_identifier'
+```
+each scenario creates its own sub-folder each containing given number of simulation csv files of experiment outcome over defined period of trial(usually 5 years) and copy of variables that is used to run that scenario.
+
+The scenario sub-folder name consists of four variables
+```bash
+var1_var2_var3_var4
+example: 1.0_31_7_180
+var1 is ratio of insertion ( 1.0 )
+var2 is start day of insertion ( 31 - begin of february)
+var3 is frequency of insertion( 7- every 7 days)
+var4 is duration of insertion(180 - 6 months of insertion)
+```
+
+
 
 ### sample input parameters
 For example, a scenario starting the model in year 2019 and its release of modified mosquitoes under constant release(0) design in year 2022 for duration of 180 days(6 months) with a frequency of every 7 days with collection factor of 0.246 for release ratios of [1.0,2.0,4.0]
@@ -99,6 +124,7 @@ is_non_constant_scenario = 0    # 0 for constant, 1 for non-constant(adaptive) i
 scale_factor            = 0.246  # collection factor to convert from number of mosquitoes to trap counts in the surveillance data
 random_seed             = 42    # random seed for reproducibility
 
+insertion_ratios        = np.round([1.0, 2.0, 4.0], decimals=1).tolist() # This is the list of insertion ratios to calculate number of mosquitoes to be released with respect to surveillance data
 intervention_durations  = [180]  # duration of the intervention in days (e.g., 180 days = 6 months)
 insertion_frequencies   = [7]  # number of days between insertions (e.g., 7 = weekly)
 ```
