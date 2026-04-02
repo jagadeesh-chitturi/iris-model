@@ -67,7 +67,7 @@ The executable should be created directly on the repository root as `mosquito_si
 
 ### Method 1 (manual tweaking of input parameters to run the model)
 
-To directly run the model via the C++ executable, you first need to configure a scenario through an input csv file. A generic template can be found at `data/constant_release_trial_in/model_input_config.csv`. A working example, representing one specific scenario, can be found in `data/inputs/model_in/variables_2.0_0_7_180.csv`. To run the example scenario, use: 
+To directly run the model with the C++ compiled executable, you first need to configure a scenario through an input csv file. A generic template can be found at `data/constant_release_trial_in/model_input_config.csv`. A working example, representing one specific scenario, can be found in `data/inputs/model_in/variables_2.0_0_7_180.csv`. To run the example scenario, use: 
 
 #### Windows
  ```bash
