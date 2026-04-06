@@ -349,6 +349,7 @@ def main() -> None:
     template_df = pd.read_csv(
         inputs_folder / "model_input_config.csv",
         header=None,
+        dtype={1: object}
     )
 
     # ------------------------------------------------------------------

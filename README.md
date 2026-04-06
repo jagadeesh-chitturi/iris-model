@@ -67,14 +67,21 @@ The executable should be created directly on the repository root as `mosquito_si
 
 ### Method 1 (manual tweaking of input parameters to run the model)
 
-You need to configure the required input parameters
-for the model present in /data/constant_release_trial_in/model_input_config.csv (template). once the template is configured for all required parameters pass the input parameters file path as below to the executable file:
+To directly run the model with the C++ compiled executable, you first need to configure a scenario through an input csv file. A generic template can be found at `data/constant_release_trial_in/model_input_config.csv`. A working example, representing one specific scenario, can be found in `data/inputs/model_in/variables_2.0_0_7_180.csv`. To run the example scenario, use: 
 
+#### Windows
  ```bash
- ./build/Release/mosquito_sim.exe data/inputs/model_in/constant_release_trial_in/model_input_config.csv
+ ./build/Release/mosquito_sim.exe data/inputs/model_in/variables_2.0_0_7_180.csv
  ```
 
- Replace `./build/Release/mosquito_sim.exe` with the proper executable file path if necessary.
+ #### Unix
+  ```bash
+ ./mosquito_sim data/inputs/model_in/variables_2.0_0_7_180.csv
+ ```
+
+ ---
+
+ Replace `./build/Release/mosquito_sim.exe` with the proper executable file path if necessary. Replace `data/inputs/model_in/variables_2.0_0_7_180.csv1` 
 
 ### Method 2 (recommended approach)
 Alternately from root folder you can run the provided python script which uses the template file and generates the input file for each scenario and run the c++ executable file(model)
